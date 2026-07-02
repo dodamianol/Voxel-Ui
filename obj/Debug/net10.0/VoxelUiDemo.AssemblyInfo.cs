@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VoxelUiDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ffbe7f6831ac74fb0f81e9ae0eccfb6a03477b3a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0476d9ea5417954e3cfb4f1bb2d5358c22b7324c")]
 [assembly: System.Reflection.AssemblyProductAttribute("VoxelUiDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VoxelUiDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

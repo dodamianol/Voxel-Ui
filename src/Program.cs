@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui;
 
@@ -6,31 +7,34 @@ namespace VoxelUiDemo;
 
 static class Program {
     private static void Main(string[] args) {
-        const int screenWidth = 800;
-        const int screenHeight = 600;
 
-        Raylib.InitWindow(screenWidth, screenHeight, "ui prototype");
+        Raylib.InitWindow(0, 0, "ui prototype");
+        //Raylib.ToggleFullscreen();
         Raylib.SetTargetFPS(60);
-
+        
+        var screenWidth = Raylib.GetMonitorWidth(0);
+        var screenHeight = Raylib.GetMonitorHeight(0);
+        
         var rootCanvas = new UiPanel {
-            Position = new Vector2(0, 0),
+            AnchorType = AnchorType.Center,
+            Offset = new Vector2(0, 0),
             Size = new Vector2(screenWidth, screenHeight),
             BackgroundColor = Color.DarkGray
         };
 
         var testButton = new UiButton {
-            Position = new Vector2(300, 250),
+            AnchorType =  AnchorType.BottomRight,
+            Offset = new Vector2(0, 0),
             Size = new Vector2(200, 50),
             BackgroundColor = Color.Gold,
             Text = "Click me!",
             OnClick = () => Console.WriteLine("Button was clicked!")
         };
 
-        rootCanvas.Children.Add(testButton);
+        rootCanvas.AddChild(testButton);
 
         List<UiRenderCommand> renderCommands = [];
 
-        // Game Loop
         while (!Raylib.WindowShouldClose()) {
             GameLoop(rootCanvas, renderCommands);
         }
@@ -44,6 +48,7 @@ static class Program {
         rootCanvas.Update(mousePos, mouseClicked);
 
         renderCommands.Clear();
+        rootCanvas.CalculateLayout();
         rootCanvas.CollectRenderCommands(renderCommands);
 
         Raylib.BeginDrawing();
@@ -51,9 +56,10 @@ static class Program {
 
         foreach (var cmd in renderCommands) {
             if (cmd.Type == CommandType.DrawRect) {
+                Console.WriteLine(cmd.Position.X + " " + cmd.Position.Y);
                 Raylib.DrawRectangle((int)cmd.Position.X, (int)cmd.Position.Y, (int)cmd.Size.X, (int)cmd.Size.Y, cmd.Color);
             }
-            else if (cmd.Type == CommandType.DrawText) {
+            else {
                 Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, 20, cmd.Color);
             }
         }

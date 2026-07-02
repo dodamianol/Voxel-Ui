@@ -9,8 +9,8 @@ public class UiButton : UiElement {
     private bool _isHovered;
 
     public override void Update(Vector2 mousePos, bool mouseClicked) {
-        _isHovered = mousePos.X >= Position.X && mousePos.X <= Position.X + Size.X &&
-                     mousePos.Y >= Position.Y && mousePos.Y <= Position.Y + Size.Y;
+        _isHovered = mousePos.X >= AbsoluteBounds.X && mousePos.X <= AbsoluteBounds.X + AbsoluteBounds.Width &&
+                     mousePos.Y >= AbsoluteBounds.Y && mousePos.Y <= AbsoluteBounds.Y + AbsoluteBounds.Height;
 
         if (_isHovered && mouseClicked) {
             OnClick?.Invoke();
@@ -24,17 +24,19 @@ public class UiButton : UiElement {
 
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
-            Position = this.Position,
-            Size = this.Size,
+            Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
+            Size = new Vector2(AbsoluteBounds.Width, AbsoluteBounds.Height),
             Color = renderColor
         });
 
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawText,
-            Position = this.Position + new Vector2(10, 15),
+            Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y) + new Vector2(10, 15),
             Text = this.Text,
             Color = Color.Black
         });
+        
+        Console.WriteLine(GetType() + " | Position is" + new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y));
 
         foreach (var child in Children) {
             child.CollectRenderCommands(commands);
