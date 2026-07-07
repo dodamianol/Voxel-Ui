@@ -1,0 +1,24 @@
+## ====== .NET / Visual Studio / Rider Build Outputs ======
+bin/
+obj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## ====== JetBrains Rider / IntelliJ Spezifisch ======
+.idea/
+*.sln.iml
+
+## ====== Visual Studio Spezifisch ======
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Log]/
+
+## ====== Betriebssystem-Dateien ======
+.DS_Store
+Thumbs.db
