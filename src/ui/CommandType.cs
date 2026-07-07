@@ -2,5 +2,6 @@
 
 public enum CommandType {
     DrawRect, 
-    DrawText
+    DrawText,
+    DrawTexture
 }

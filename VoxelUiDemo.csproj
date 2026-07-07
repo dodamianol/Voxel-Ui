@@ -11,4 +11,12 @@
         <PackageReference Include="Raylib-cs" Version="8.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="assets\textures\" />
+
+        <None Update="assets\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>
