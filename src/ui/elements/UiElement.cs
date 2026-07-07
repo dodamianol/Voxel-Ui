@@ -11,7 +11,7 @@ public abstract class UiElement {
     public UiElement Parent { get; private set; }
     public List<UiElement> Children { get; } = [];
     
-    public bool IsVisible { get; private set; } = true;
+    public bool IsVisible { get; set; } = true;
     
     public AnchorType AnchorType = AnchorType.TopLeft;
     public Vector2 Offset { get; set; }
@@ -38,9 +38,17 @@ public abstract class UiElement {
         }
     }
 
-    public virtual void CollectRenderCommands(List<UiRenderCommand> commands) {
+    public void CollectRenderCommands(List<UiRenderCommand> commands) {
         if (!IsVisible) return;
         
+        RenderSelf(commands);
+        
+        foreach (var child in Children) {
+            child.CollectRenderCommands(commands);
+        }
+    }
+
+    protected virtual void RenderSelf(List<UiRenderCommand> commands) {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
             Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
@@ -48,9 +56,6 @@ public abstract class UiElement {
             Color = this.BackgroundColor
         });
 
-        foreach (var child in Children) {
-            child.CollectRenderCommands(commands);
-        }
     }
 
     public void CalculateLayout() {

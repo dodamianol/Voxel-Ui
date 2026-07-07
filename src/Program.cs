@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Compression;
-using System.Numerics;
+﻿using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui;
 
@@ -26,13 +24,14 @@ static class Program {
         var midCanvas = new UiPanel() {
             AnchorType = AnchorType.TopLeft,
             Size = new Vector2(500, 500),
-            BackgroundColor = Color.Gray
+            BackgroundColor = Color.Gray,
         };
         
         rootCanvas.AddChild(midCanvas);
 
         var testButton = new UiButton {
             AnchorType =  AnchorType.BottomRight,
+            IsVisible = false,
             Offset = new Vector2(0, 0),
             Size = new Vector2(200, 50),
             BackgroundColor = Color.Gold,

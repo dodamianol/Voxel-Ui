@@ -5,9 +5,9 @@ namespace VoxelUiDemo.ui;
 
 public class UiButton : UiElement {
     public string Text { get; set; }
-    public Action OnClick { get; set; }
+    public Action? OnClick { get; set; }
     
-    public override void CollectRenderCommands(List<UiRenderCommand> commands) {
+    protected override void RenderSelf(List<UiRenderCommand> commands) {
         var renderColor = IsHovered ? Color.LightGray : BackgroundColor;
 
         commands.Add(new UiRenderCommand {
@@ -23,9 +23,5 @@ public class UiButton : UiElement {
             Text = Text,
             Color = Color.Black
         });
-        
-        foreach (var child in Children) {
-            child.CollectRenderCommands(commands); 
-        }
     }
 }
