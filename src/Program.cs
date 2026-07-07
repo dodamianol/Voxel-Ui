@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui;
@@ -22,6 +23,14 @@ static class Program {
             BackgroundColor = Color.DarkGray
         };
 
+        var midCanvas = new UiPanel() {
+            AnchorType = AnchorType.TopLeft,
+            Size = new Vector2(500, 500),
+            BackgroundColor = Color.Gray
+        };
+        
+        rootCanvas.AddChild(midCanvas);
+
         var testButton = new UiButton {
             AnchorType =  AnchorType.BottomRight,
             Offset = new Vector2(0, 0),
@@ -31,7 +40,7 @@ static class Program {
             OnClick = () => Console.WriteLine("Button was clicked!")
         };
 
-        rootCanvas.AddChild(testButton);
+        midCanvas.AddChild(testButton);
 
         List<UiRenderCommand> renderCommands = [];
 
@@ -44,11 +53,15 @@ static class Program {
 
     private static void GameLoop(UiPanel rootCanvas, List<UiRenderCommand> renderCommands) {
         var mousePos = Raylib.GetMousePosition();
-        var mouseClicked = Raylib.IsMouseButtonPressed(MouseButton.Left);
-        rootCanvas.Update(mousePos, mouseClicked);
+        rootCanvas.Update(mousePos);
+
+        rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)
+
+        if (Raylib.IsMouseButtonPressed(MouseButton.Left)) {
+            HandleMouseClick(rootCanvas, mousePos);
+        }
 
         renderCommands.Clear();
-        rootCanvas.CalculateLayout();
         rootCanvas.CollectRenderCommands(renderCommands);
 
         Raylib.BeginDrawing();
@@ -56,7 +69,6 @@ static class Program {
 
         foreach (var cmd in renderCommands) {
             if (cmd.Type == CommandType.DrawRect) {
-                Console.WriteLine(cmd.Position.X + " " + cmd.Position.Y);
                 Raylib.DrawRectangle((int)cmd.Position.X, (int)cmd.Position.Y, (int)cmd.Size.X, (int)cmd.Size.Y, cmd.Color);
             }
             else {
@@ -65,5 +77,22 @@ static class Program {
         }
 
         Raylib.EndDrawing();
+    }
+    
+    private static bool HandleMouseClick(UiElement element, Vector2 mousePos) {
+        
+        if (!element.IsVisible) return false;
+        if (!Raylib.CheckCollisionPointRec(mousePos, element.AbsoluteBounds)) return false;
+        
+        for (var i = element.Children.Count - 1; i >= 0; i--) {
+            if (HandleMouseClick(element.Children[i], mousePos)) {
+                return true; 
+            }
+        }
+
+        if (element is not UiButton button) return element.BlocksInput;
+        
+        button.OnClick?.Invoke();
+        return true;
     }
 }

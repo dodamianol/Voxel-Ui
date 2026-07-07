@@ -7,26 +7,40 @@ using Rectangle = Raylib_cs.Rectangle;
 namespace VoxelUiDemo.ui;
 
 public abstract class UiElement {
+    
+    public UiElement Parent { get; private set; }
+    public List<UiElement> Children { get; } = [];
+    
+    public bool IsVisible { get; private set; } = true;
+    
     public AnchorType AnchorType = AnchorType.TopLeft;
     public Vector2 Offset { get; set; }
     public Vector2 Size { get; set; }
-    public Color BackgroundColor { get; set; } = Color.Gray;
-    public List<UiElement> Children { get; } = [];
-    public UiElement Parent { get; private set; }
     public Rectangle AbsoluteBounds { get; private set; }
+    
+    public Color BackgroundColor { get; set; } = Color.Gray;
+    
+    public bool IsHovered;
+    public bool BlocksInput { get; set; } = true;
+
 
     public void AddChild(UiElement child) {
         child.Parent = this;
         Children.Add(child);
     }
 
-    public virtual void Update(Vector2 mousePos, bool mouseClicked) {
+    public virtual void Update(Vector2 mousePos) {
+        IsHovered = Raylib.CheckCollisionPointRec(mousePos, AbsoluteBounds);
+        //_isHovered = mousePos.X >= AbsoluteBounds.X && mousePos.X <= AbsoluteBounds.X + AbsoluteBounds.Width && mousePos.Y >= AbsoluteBounds.Y && mousePos.Y <= AbsoluteBounds.Y + AbsoluteBounds.Height;
+        
         foreach (var child in Children) {
-            child.Update(mousePos, mouseClicked);
+            child.Update(mousePos);
         }
     }
 
     public virtual void CollectRenderCommands(List<UiRenderCommand> commands) {
+        if (!IsVisible) return;
+        
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
             Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
