@@ -25,6 +25,7 @@ static class Program {
         UiTempContent.AddTopLeft(rootCanvas);
         UiTempContent.AddTexture(rootCanvas);
         UiTempContent.AddStackPanel(rootCanvas);
+        UiTempContent.AddGridPanel(rootCanvas);
 
 
         List<UiRenderCommand> renderCommands = [];

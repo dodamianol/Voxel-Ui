@@ -10,19 +10,20 @@ public abstract class UiElement {
     public UiElement? Parent { get; private set; }
     public List<UiElement> Children { get; } = [];
     
-    public bool IsVisible { get; set; } = true;
-    public bool IsLayoutManaged { get; set; } = false;
+    public bool IsVisible { get; init; } = true;
     
     public AnchorType AnchorType = AnchorType.TopLeft;
-    public Vector2 Offset { get; set; }
-    public Vector2 Size { get; set; }
-    public Rectangle AbsoluteBounds { get; protected set; }
+    public Vector2 Offset { get; init; }
+    public Vector2 Size { get; init; }
+    public Rectangle AbsoluteBounds { get; private set; }
     
-    public Color BackgroundColor { get; set; } = Color.Gray;
+    public Color BackgroundColor { get; init; } = Color.Gray;
     
     public bool IsHovered;
     public bool BlocksInput { get; set; } = true;
 
+    
+    private bool IsLayoutManaged { get; set; } = false;
 
     public void AddChild(UiElement child) {
         child.Parent = this;

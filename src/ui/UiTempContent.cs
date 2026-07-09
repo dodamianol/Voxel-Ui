@@ -51,6 +51,7 @@ public static class UiTempContent {
             Offset = new Vector2(0, -50),
             Spacing = 15,
             Orientation = Orientation.Horizontal,
+            BackgroundColor = new Color(0, 0, 0, 0)
         };
         rootCanvas.AddChild(stackPanel);
         
@@ -61,6 +62,27 @@ public static class UiTempContent {
                 BackgroundColor = Color.Orange
             };
             stackPanel.AddChild(stackPanelChild);
+        }
+    }
+
+    public static void AddGridPanel(UiElement rootCanvas) {
+        var gridPanel = new UiGridPanel() {
+            AnchorType = AnchorType.MiddleRight,
+            Size = new Vector2(500, 500),
+            Offset = new Vector2(-50, 0),
+            ElementsPerRow = 4,
+            SpacingX = 15,
+            SpacingY = 15
+        };
+        rootCanvas.AddChild(gridPanel);
+        
+        for (var i = 0; i < 11; i++) {
+            var stackPanelChild = new UiPanel() {
+                AnchorType = AnchorType.Center,
+                Size = new Vector2(100, 100),
+                BackgroundColor = Color.Orange
+            };
+            gridPanel.AddChild(stackPanelChild);
         }
     }
     
