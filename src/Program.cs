@@ -22,38 +22,9 @@ static class Program {
             BackgroundColor = Color.DarkGray
         };
 
-        var midCanvas = new UiPanel() {
-            AnchorType = AnchorType.TopLeft,
-            Size = new Vector2(500, 500),
-            BackgroundColor = Color.Gray,
-        };
-        
-        rootCanvas.AddChild(midCanvas);
-
-        var testButton = new UiButton {
-            AnchorType =  AnchorType.BottomRight,
-            Offset = new Vector2(0, 0),
-            Size = new Vector2(200, 50),
-            BackgroundColor = Color.Gold,
-            Text = "Click me!",
-            OnClick = () => Console.WriteLine("Button was clicked!")
-        };
-        midCanvas.AddChild(testButton);
-
-        var testTexture = new UiImage() {
-            AnchorType = AnchorType.Center,
-            Size = new Vector2(50, 50),
-            Texture = Raylib.LoadTexture("assets/textures/grass0.png")
-        };
-        rootCanvas.AddChild(testTexture);
-
-        var transparentPanel = new UiPanel() {
-            AnchorType = AnchorType.Center,
-            Offset = new Vector2(100, 0),
-            Size = new Vector2(200, 200),
-            BackgroundColor = new Color(0, 0, 0, 200),
-        };
-        rootCanvas.AddChild(transparentPanel);
+        UiTempContent.AddTopLeft(rootCanvas);
+        UiTempContent.AddTexture(rootCanvas);
+        UiTempContent.AddStackPanel(rootCanvas);
 
 
         List<UiRenderCommand> renderCommands = [];

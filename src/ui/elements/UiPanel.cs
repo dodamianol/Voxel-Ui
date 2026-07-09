@@ -1,4 +1,4 @@
-﻿namespace VoxelUiDemo.ui;
+﻿namespace VoxelUiDemo.ui.elements;
 
 public class UiPanel : UiElement {
 }

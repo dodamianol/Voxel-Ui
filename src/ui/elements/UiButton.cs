@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 
-namespace VoxelUiDemo.ui;
+namespace VoxelUiDemo.ui.elements;
 
 public class UiButton : UiElement {
     public string Text { get; set; }

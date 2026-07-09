@@ -1,22 +1,22 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 using Raylib_cs;
 using Color = Raylib_cs.Color;
 using Rectangle = Raylib_cs.Rectangle;
 
-namespace VoxelUiDemo.ui;
+namespace VoxelUiDemo.ui.elements;
 
 public abstract class UiElement {
     
-    public UiElement Parent { get; private set; }
+    public UiElement? Parent { get; private set; }
     public List<UiElement> Children { get; } = [];
     
     public bool IsVisible { get; set; } = true;
+    public bool IsLayoutManaged { get; set; } = false;
     
     public AnchorType AnchorType = AnchorType.TopLeft;
     public Vector2 Offset { get; set; }
     public Vector2 Size { get; set; }
-    public Rectangle AbsoluteBounds { get; private set; }
+    public Rectangle AbsoluteBounds { get; protected set; }
     
     public Color BackgroundColor { get; set; } = Color.Gray;
     
@@ -58,22 +58,26 @@ public abstract class UiElement {
 
     }
 
-    public void CalculateLayout() {
-        var parentPos = Parent?.AbsoluteBounds.Position ?? Vector2.Zero;
-        var parentSize = Parent?.AbsoluteBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+    public virtual void CalculateLayout() {
+        if (!IsVisible) return;
 
-        var factor = GetAnchorFactor(AnchorType);
+        if (!IsLayoutManaged) {
+            var parentPos = Parent?.AbsoluteBounds.Position ?? Vector2.Zero;
+            var parentSize = Parent?.AbsoluteBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
 
-        var anchorPoint = parentPos + (parentSize - Size) * factor;
-        var finalPos = anchorPoint + Offset;
-        AbsoluteBounds = new Rectangle(finalPos.X, finalPos.Y, Size.X, Size.Y);
+            var factor = GetAnchorFactor(AnchorType);
+
+            var anchorPoint = parentPos + (parentSize - Size) * factor;
+            var finalPos = anchorPoint + Offset;
+            AbsoluteBounds = new Rectangle(finalPos.X, finalPos.Y, Size.X, Size.Y);
+        }
 
         foreach (var child in Children) {
             child.CalculateLayout();
         }
     }
     
-    private static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
+    protected static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
         AnchorType.TopLeft      => new Vector2(0f, 0f),
         AnchorType.TopCenter    => new Vector2(0.5f, 0f),
         AnchorType.TopRight     => new Vector2(1f, 0f),
@@ -85,4 +89,9 @@ public abstract class UiElement {
         AnchorType.BottomRight  => new Vector2(1f, 1f),
         _ => throw new ArgumentOutOfRangeException(nameof(anchor))
     };
+    
+    internal void AssignLayoutBounds(Rectangle bounds) {
+        this.AbsoluteBounds = bounds;
+        this.IsLayoutManaged = true;
+    }
 }
