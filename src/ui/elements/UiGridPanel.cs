@@ -3,10 +3,10 @@
 namespace VoxelUiDemo.ui.elements;
 
 public class UiGridPanel :  UiElement {
-    // public Orientation PrimaryOrientation = Orientation.Horizontal;
+    public Orientation PrimaryOrientation = Orientation.Horizontal;
     public float SpacingX { get; init; } = 10;
     public float SpacingY { get; init; } = 10;
-    public int ElementsPerRow { get; init; } = 3;
+    public int ElementsPerPrimarayDimension { get; init; } = 3;
     
     public override void CalculateLayout() {
         base.CalculateLayout();
@@ -21,14 +21,25 @@ public class UiGridPanel :  UiElement {
             child.AssignLayoutBounds(nextBounds);
             
             child.CalculateLayout();
-            
-            xPos += child.Size.X + SpacingX;
+
+            if (PrimaryOrientation == Orientation.Horizontal) {
+                xPos += SpacingX;
+            }
+            else {
+                yPos += SpacingY;
+            }
             countInCurrentRow++;
 
-            if (countInCurrentRow < ElementsPerRow) continue;
-            
-            yPos += child.Size.Y + SpacingY;
-            xPos = AbsoluteBounds.X;
+            if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
+
+            if (PrimaryOrientation == Orientation.Horizontal) {
+                xPos = AbsoluteBounds.X;    
+                yPos += SpacingY;
+            }
+            else {
+                xPos += + SpacingX;
+                yPos =  AbsoluteBounds.Y;
+            }
             countInCurrentRow = 0;
         }
     }

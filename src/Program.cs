@@ -61,13 +61,8 @@ static class Program {
                 Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, 20, cmd.Color);
             }
             else if (cmd is { Type: CommandType.DrawTexture, Texture: not null }) {
-                // SourceRec = Der Ausschnitt aus dem Originalbild (hier das ganze Bild)
                 var sourceRec = new Rectangle(0, 0, cmd.Texture.Value.Width, cmd.Texture.Value.Height);
-        
-                // DestRec = Wohin auf den Bildschirm soll es? (Unsere AbsoluteBounds)
                 var destRec = new Rectangle(cmd.Position.X, cmd.Position.Y, cmd.Size.X, cmd.Size.Y);
-        
-                // Zeichnet das Bild passgenau!
                 Raylib.DrawTexturePro(cmd.Texture.Value, sourceRec, destRec, Vector2.Zero, 0f, cmd.Color);
             }
         }

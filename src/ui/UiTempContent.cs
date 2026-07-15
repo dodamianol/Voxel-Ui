@@ -49,7 +49,7 @@ public static class UiTempContent {
             AnchorType = AnchorType.BottomCenter,
             Size = new Vector2(1020, 100),
             Offset = new Vector2(0, -50),
-            Spacing = 15,
+            Spacing = 115,
             Orientation = Orientation.Horizontal,
             BackgroundColor = new Color(0, 0, 0, 0)
         };
@@ -70,9 +70,10 @@ public static class UiTempContent {
             AnchorType = AnchorType.MiddleRight,
             Size = new Vector2(500, 500),
             Offset = new Vector2(-50, 0),
-            ElementsPerRow = 4,
-            SpacingX = 15,
-            SpacingY = 15
+            PrimaryOrientation =  Orientation.Vertical,
+            ElementsPerPrimarayDimension = 4,
+            SpacingX = 115,
+            SpacingY = 115
         };
         rootCanvas.AddChild(gridPanel);
         
