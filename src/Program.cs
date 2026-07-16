@@ -58,7 +58,7 @@ static class Program {
                 Raylib.DrawRectangle((int)cmd.Position.X, (int)cmd.Position.Y, (int)cmd.Size.X, (int)cmd.Size.Y, cmd.Color);
             }
             else if (cmd.Type == CommandType.DrawText) {
-                Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, 20, cmd.Color);
+                Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, cmd.FontSize, cmd.Color);
             }
             else if (cmd is { Type: CommandType.DrawTexture, Texture: not null }) {
                 var sourceRec = new Rectangle(0, 0, cmd.Texture.Value.Width, cmd.Texture.Value.Height);

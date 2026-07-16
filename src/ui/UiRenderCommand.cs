@@ -9,5 +9,6 @@ public struct UiRenderCommand {
     public Vector2 Size;
     public Color Color;
     public string Text;
+    public int FontSize;
     public Texture2D? Texture { get; init; }
 }

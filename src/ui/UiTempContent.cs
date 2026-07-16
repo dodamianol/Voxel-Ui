@@ -14,6 +14,7 @@ public static class UiTempContent {
 
         rootCanvas.AddChild(midCanvas);
 
+        /*
         var testButton = new UiButton {
             AnchorType = AnchorType.BottomRight,
             Offset = new Vector2(0, 0),
@@ -21,8 +22,24 @@ public static class UiTempContent {
             BackgroundColor = Color.Gold,
             Text = "Click me!",
             OnClick = () => Console.WriteLine("Button was clicked!")
-        };
+        };*/
 
+        var testButton = new UiButton {
+            AnchorType = AnchorType.BottomRight,
+            Size = new Vector2(200, 50),
+            BackgroundColor = Color.Gold,
+            OnClick = () => Console.WriteLine("Button was clicked!"),
+            Text = new UiText {
+                AnchorType = AnchorType.Center,
+                Text = "Click me!",
+                FontSize = 24,
+                TextColor = Color.White,
+                Size = new Vector2(200, 50),
+                AlignH = TextAlignmentHorizontal.Center,
+                AlignV = TextAlignmentVertical.Center
+            }
+        };
+        
         midCanvas.AddChild(testButton);
 
     }
