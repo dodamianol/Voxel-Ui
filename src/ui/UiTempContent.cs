@@ -6,24 +6,14 @@ namespace VoxelUiDemo.ui;
 public static class UiTempContent {
 
     public static void AddTopLeft(UiElement rootCanvas) {
-        var midCanvas = new UiPanel() {
+        var topLeft = new UiPanel() {
             AnchorType = AnchorType.TopLeft,
             Size = new Vector2(500, 500),
             BackgroundColor = Color.Gray,
         };
 
-        rootCanvas.AddChild(midCanvas);
-
-        /*
-        var testButton = new UiButton {
-            AnchorType = AnchorType.BottomRight,
-            Offset = new Vector2(0, 0),
-            Size = new Vector2(200, 50),
-            BackgroundColor = Color.Gold,
-            Text = "Click me!",
-            OnClick = () => Console.WriteLine("Button was clicked!")
-        };*/
-
+        rootCanvas.AddChild(topLeft);
+        
         var testButton = new UiButton {
             AnchorType = AnchorType.BottomRight,
             Size = new Vector2(200, 50),
@@ -40,7 +30,7 @@ public static class UiTempContent {
             }
         };
         
-        midCanvas.AddChild(testButton);
+        topLeft.AddChild(testButton);
 
     }
     
@@ -103,6 +93,31 @@ public static class UiTempContent {
             gridPanel.AddChild(stackPanelChild);
         }
     }
-    
+
+    public static void AddSlider(UiElement rootCanvas) {
+        var topRight = new UiPanel() {
+            AnchorType = AnchorType.TopRight,
+            Offset = new Vector2(-50, 50),
+            Size = new Vector2(750, 250),
+            BackgroundColor = Color.Gray,
+        };
+        rootCanvas.AddChild(topRight);
+
+        var sliderBackground = new UiPanel() {
+            AnchorType = AnchorType.TopLeft,
+            Size = new Vector2(450, 75),
+            Offset = new Vector2(20, 20),
+            BackgroundColor = Color.Brown,
+        };
+        topRight.AddChild(sliderBackground);
+
+        var slider = new UiSlider() {
+            AnchorType = AnchorType.Center,
+            Size = new Vector2(450, 75),
+            BackgroundColor = Color.Orange,
+        };
+        sliderBackground.AddChild(slider);
+    }
+
 }
 

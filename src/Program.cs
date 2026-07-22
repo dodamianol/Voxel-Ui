@@ -6,6 +6,8 @@ using VoxelUiDemo.ui.elements;
 namespace VoxelUiDemo;
 
 static class Program {
+    private static Draggable? _activeDragElement = null;
+    
     private static void Main(string[] args) {
 
         Raylib.InitWindow(0, 0, "ui prototype");
@@ -26,6 +28,7 @@ static class Program {
         UiTempContent.AddTexture(rootCanvas);
         UiTempContent.AddStackPanel(rootCanvas);
         UiTempContent.AddGridPanel(rootCanvas);
+        UiTempContent.AddSlider(rootCanvas);
 
 
         List<UiRenderCommand> renderCommands = [];
@@ -40,16 +43,33 @@ static class Program {
     private static void GameLoop(UiPanel rootCanvas, List<UiRenderCommand> renderCommands) {
         var mousePos = Raylib.GetMousePosition();
         rootCanvas.Update(mousePos);
-
         rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)
 
+        HandleMouseActions(rootCanvas, mousePos);
+        
+        renderCommands.Clear();
+        rootCanvas.CollectRenderCommands(renderCommands);
+        DrawCommands(renderCommands);
+    }
+    
+    private static void HandleMouseActions(UiElement rootCanvas, Vector2 mousePos) {
         if (Raylib.IsMouseButtonPressed(MouseButton.Left)) {
             HandleMouseClick(rootCanvas, mousePos);
         }
+        
+        else if (Raylib.IsMouseButtonDown(MouseButton.Left)) {
+            _activeDragElement?.OnDrag(mousePos);
+        }
+        
+        else if (Raylib.IsMouseButtonReleased(MouseButton.Left)) {
+            if (_activeDragElement == null) return;
+            
+            _activeDragElement.OnDragEnd();
+            _activeDragElement = null;
+        }
+    }
 
-        renderCommands.Clear();
-        rootCanvas.CollectRenderCommands(renderCommands);
-
+    private static void DrawCommands(List<UiRenderCommand> renderCommands) {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Color.Black);
 
@@ -71,19 +91,24 @@ static class Program {
     }
     
     private static bool HandleMouseClick(UiElement element, Vector2 mousePos) {
-        
         if (!element.IsVisible) return false;
-        if (!Raylib.CheckCollisionPointRec(mousePos, element.AbsoluteBounds)) return false;
+        
+        if (!element.ContainsPoint(mousePos)) return false;
         
         for (var i = element.Children.Count - 1; i >= 0; i--) {
-            if (HandleMouseClick(element.Children[i], mousePos)) {
-                return true; 
-            }
+            if (HandleMouseClick(element.Children[i], mousePos)) return true; 
         }
-
-        if (element is not UiButton button) return element.BlocksInput;
         
-        button.OnClick?.Invoke();
-        return true;
+        switch (element) {
+            case Draggable draggable:
+                _activeDragElement = draggable;
+                draggable.OnDragStart(mousePos);
+                return true;
+            case Clickable clickable:
+                clickable.OnClickReceived();
+                return true;
+            default:
+                return element.BlocksInput;
+        }
     }
 }

@@ -12,7 +12,8 @@ public class UiText : UiElement {
     public TextAlignmentVertical AlignV { get; set; } = TextAlignmentVertical.Center;
 
     public UiText() {
-        BackgroundColor = Color.Blank; 
+        BackgroundColor = Color.Blank;
+        BlocksInput = false;
     }
 
     protected override void RenderSelf(List<UiRenderCommand> commands) {

@@ -17,7 +17,7 @@ public abstract class UiElement {
     public Vector2 Size { get; init; }
     public Rectangle AbsoluteBounds { get; private set; }
     
-    public Color BackgroundColor { get; init; } = Color.Gray;
+    public Color BackgroundColor { get; set; } = Color.Gray;
     
     public bool IsHovered;
     public bool BlocksInput { get; set; } = true;
@@ -29,9 +29,13 @@ public abstract class UiElement {
         child.Parent = this;
         Children.Add(child);
     }
+    
+    public virtual bool ContainsPoint(Vector2 point) {
+        return Raylib.CheckCollisionPointRec(point, AbsoluteBounds);
+    }
 
     public virtual void Update(Vector2 mousePos) {
-        IsHovered = Raylib.CheckCollisionPointRec(mousePos, AbsoluteBounds);
+        IsHovered = ContainsPoint(mousePos);
         //_isHovered = mousePos.X >= AbsoluteBounds.X && mousePos.X <= AbsoluteBounds.X + AbsoluteBounds.Width && mousePos.Y >= AbsoluteBounds.Y && mousePos.Y <= AbsoluteBounds.Y + AbsoluteBounds.Height;
         
         foreach (var child in Children) {
