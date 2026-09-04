@@ -6,8 +6,8 @@ public class UiStackPanel :  UiElement {
     public Orientation Orientation = Orientation.Horizontal;
     public float Spacing { get; set; } = 10;
     
-    public override void CalculateLayout() {
-        base.CalculateLayout();
+    protected override void CalculateOwnLayout() {
+        base.CalculateOwnLayout();
 
         var cursor = (Orientation == Orientation.Horizontal) ? AbsoluteBounds.X : AbsoluteBounds.Y;
 

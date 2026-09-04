@@ -105,7 +105,7 @@ public static class UiTempContent {
 
         var sliderBackground = new UiPanel() {
             AnchorType = AnchorType.TopLeft,
-            Size = new Vector2(450, 75),
+            Size = new Vector2(500, 50),
             Offset = new Vector2(20, 20),
             BackgroundColor = Color.Brown,
         };
@@ -113,10 +113,28 @@ public static class UiTempContent {
 
         var slider = new UiSlider() {
             AnchorType = AnchorType.Center,
-            Size = new Vector2(450, 75),
+            Size = new Vector2(500, 50),
             BackgroundColor = Color.Orange,
         };
         sliderBackground.AddChild(slider);
+        
+        var sliderBackground2 = new UiPanel() {
+            AnchorType = AnchorType.TopLeft,
+            Size = new Vector2(500, 50),
+            Offset = new Vector2(20, 95),
+            Scale = new Vector2(1.5f),
+            BackgroundColor = Color.Brown,
+            
+        };
+        topRight.AddChild(sliderBackground2);
+        
+        var slider2 = new UiSlider() {
+            AnchorType = AnchorType.Center,
+            Size = new Vector2(500, 50),
+            Offset = new Vector2(0, 0),
+            BackgroundColor = Color.Orange,
+        };
+        sliderBackground2.AddChild(slider2);
     }
 
 }

@@ -7,9 +7,9 @@ public class UiGridPanel :  UiElement {
     public float SpacingX { get; init; } = 10;
     public float SpacingY { get; init; } = 10;
     public int ElementsPerPrimarayDimension { get; init; } = 3;
-    
-    public override void CalculateLayout() {
-        base.CalculateLayout();
+
+    protected override void CalculateOwnLayout() {
+        base.CalculateOwnLayout();
         
         var countInCurrentRow = 0;
         var xPos = AbsoluteBounds.X;

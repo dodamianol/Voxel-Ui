@@ -36,14 +36,14 @@ public class UiText : UiElement {
 
     private float getXPos(int textWidth) {
         var drawX = AbsoluteBounds.X;
-        
+
         if (AlignH == TextAlignmentHorizontal.Center) {
             drawX += (AbsoluteBounds.Width - textWidth) / 2f;
-        } 
+        }
         else if (AlignH == TextAlignmentHorizontal.Right) {
             drawX += AbsoluteBounds.Width - textWidth;
         }
-        
+
         return drawX;
     }
 

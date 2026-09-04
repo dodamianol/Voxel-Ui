@@ -13,9 +13,11 @@ public abstract class UiElement {
     public bool IsVisible { get; init; } = true;
     
     public AnchorType AnchorType = AnchorType.TopLeft;
-    public Vector2 Offset { get; init; }
-    public Vector2 Size { get; init; }
-    public Rectangle AbsoluteBounds { get; private set; }
+    public Vector2 Offset { get; set; }
+    public Vector2 Size { get; set; }
+    public Vector2 Scale { get; set; } = Vector2.One;
+    public Vector2 AbsoluteScale { get; private set; } = Vector2.One;
+    public Rectangle AbsoluteBounds { get; private set; } 
     
     public Color BackgroundColor { get; set; } = Color.Gray;
     
@@ -23,7 +25,7 @@ public abstract class UiElement {
     public bool BlocksInput { get; set; } = true;
 
     
-    private bool IsLayoutManaged { get; set; } = false;
+    private bool IsLayoutManaged { get; set; } 
 
     public void AddChild(UiElement child) {
         child.Parent = this;
@@ -58,31 +60,39 @@ public abstract class UiElement {
             Type = CommandType.DrawRect,
             Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
             Size = new Vector2(AbsoluteBounds.Width, AbsoluteBounds.Height),
-            Color = this.BackgroundColor
+            Color = BackgroundColor
         });
-
     }
 
-    public virtual void CalculateLayout() {
+    public void CalculateLayout() {
         if (!IsVisible) return;
 
         if (!IsLayoutManaged) {
-            var parentPos = Parent?.AbsoluteBounds.Position ?? Vector2.Zero;
-            var parentSize = Parent?.AbsoluteBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-
-            var factor = GetAnchorFactor(AnchorType);
-
-            var anchorPoint = parentPos + (parentSize - Size) * factor;
-            var finalPos = anchorPoint + Offset;
-            AbsoluteBounds = new Rectangle(finalPos.X, finalPos.Y, Size.X, Size.Y);
+            CalculateOwnLayout();
         }
 
         foreach (var child in Children) {
             child.CalculateLayout();
         }
     }
+
+    protected virtual void CalculateOwnLayout() {
+        var parentPos = Parent?.AbsoluteBounds.Position ?? Vector2.Zero;
+        var parentSize = Parent?.AbsoluteBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+
+        var parentScale = Parent?.AbsoluteScale ?? Vector2.One;
+        AbsoluteScale = parentScale * Scale;
+        var scaledSize = Size * AbsoluteScale;
+        var scaledOffset = Offset * AbsoluteScale;
+        
+        var factor = GetAnchorFactor(AnchorType);
+
+        var anchorPoint = parentPos + (parentSize - Size) * factor;
+        var finalPos = anchorPoint + scaledOffset;
+        AbsoluteBounds = new Rectangle(finalPos.X, finalPos.Y, scaledSize.X, scaledSize.Y);
+    }
     
-    protected static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
+    private static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
         AnchorType.TopLeft      => new Vector2(0f, 0f),
         AnchorType.TopCenter    => new Vector2(0.5f, 0f),
         AnchorType.TopRight     => new Vector2(1f, 0f),
@@ -96,7 +106,10 @@ public abstract class UiElement {
     };
     
     internal void AssignLayoutBounds(Rectangle bounds) {
-        this.AbsoluteBounds = bounds;
-        this.IsLayoutManaged = true;
+        var parentScale = Parent?.AbsoluteScale ?? Vector2.One;
+        AbsoluteScale = parentScale * Scale;
+        
+        AbsoluteBounds = bounds;
+        IsLayoutManaged = true;
     }
 }
