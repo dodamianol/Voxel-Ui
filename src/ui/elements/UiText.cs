@@ -35,26 +35,26 @@ public class UiText : UiElement {
     }
 
     private float getXPos(int textWidth) {
-        var drawX = AbsoluteBounds.X;
+        var drawX = FinalBounds.X;
 
         if (AlignH == TextAlignmentHorizontal.Center) {
-            drawX += (AbsoluteBounds.Width - textWidth) / 2f;
+            drawX += (FinalBounds.Width - textWidth) / 2f;
         }
         else if (AlignH == TextAlignmentHorizontal.Right) {
-            drawX += AbsoluteBounds.Width - textWidth;
+            drawX += FinalBounds.Width - textWidth;
         }
 
         return drawX;
     }
 
     private float getYPos(int textHeight) {
-        var drawY = AbsoluteBounds.Y;
+        var drawY = FinalBounds.Y;
 
         if (AlignV == TextAlignmentVertical.Center) {
-            drawY += (AbsoluteBounds.Height - textHeight) / 2f;
+            drawY += (FinalBounds.Height - textHeight) / 2f;
         } 
         else if (AlignV == TextAlignmentVertical.Bottom) {
-            drawY += AbsoluteBounds.Height - textHeight;
+            drawY += FinalBounds.Height - textHeight;
         }
 
         return drawY;

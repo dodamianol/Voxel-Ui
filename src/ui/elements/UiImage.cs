@@ -12,8 +12,8 @@ public class UiImage : UiElement {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawTexture,
             Texture = Texture,
-            Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
-            Size = new Vector2(AbsoluteBounds.Width, AbsoluteBounds.Height),
+            Position = new Vector2(FinalBounds.X, FinalBounds.Y),
+            Size = new Vector2(FinalBounds.Width, FinalBounds.Height),
             Color = Tint
         });
     }

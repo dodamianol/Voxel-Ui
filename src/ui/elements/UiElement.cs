@@ -6,24 +6,25 @@ using Rectangle = Raylib_cs.Rectangle;
 namespace VoxelUiDemo.ui.elements;
 
 public abstract class UiElement {
-    
     public UiElement? Parent { get; private set; }
     public List<UiElement> Children { get; } = [];
     
     public bool IsVisible { get; init; } = true;
     
     public AnchorType AnchorType = AnchorType.TopLeft;
+
+    // Transform
     public Vector2 Offset { get; set; }
     public Vector2 Size { get; set; }
     public Vector2 Scale { get; set; } = Vector2.One;
-    public Vector2 AbsoluteScale { get; private set; } = Vector2.One;
-    public Rectangle AbsoluteBounds { get; private set; } 
-    
+
+    public Vector2 FinalScale { get; private set; } = Vector2.One;
+    public Rectangle FinalBounds { get; private set; } 
+
     public Color BackgroundColor { get; set; } = Color.Gray;
     
     public bool IsHovered;
     public bool BlocksInput { get; set; } = true;
-
     
     private bool IsLayoutManaged { get; set; } 
 
@@ -33,7 +34,7 @@ public abstract class UiElement {
     }
     
     public virtual bool ContainsPoint(Vector2 point) {
-        return Raylib.CheckCollisionPointRec(point, AbsoluteBounds);
+        return Raylib.CheckCollisionPointRec(point, FinalBounds);
     }
 
     public virtual void Update(Vector2 mousePos) {
@@ -58,8 +59,8 @@ public abstract class UiElement {
     protected virtual void RenderSelf(List<UiRenderCommand> commands) {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
-            Position = new Vector2(AbsoluteBounds.X, AbsoluteBounds.Y),
-            Size = new Vector2(AbsoluteBounds.Width, AbsoluteBounds.Height),
+            Position = new Vector2(FinalBounds.X, FinalBounds.Y),
+            Size = new Vector2(FinalBounds.Width, FinalBounds.Height),
             Color = BackgroundColor
         });
     }
@@ -77,19 +78,19 @@ public abstract class UiElement {
     }
 
     protected virtual void CalculateOwnLayout() {
-        var parentPos = Parent?.AbsoluteBounds.Position ?? Vector2.Zero;
-        var parentSize = Parent?.AbsoluteBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        var parentPos = Parent?.FinalBounds.Position ?? Vector2.Zero;
+        var parentSize = Parent?.FinalBounds.Size ?? new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
 
-        var parentScale = Parent?.AbsoluteScale ?? Vector2.One;
-        AbsoluteScale = parentScale * Scale;
-        var scaledSize = Size * AbsoluteScale;
-        var scaledOffset = Offset * AbsoluteScale;
+        var parentScale = Parent?.FinalScale ?? Vector2.One;
+        FinalScale = parentScale * Scale;
+        var scaledSize = Size * FinalScale;
+        var scaledOffset = Offset * FinalScale;
         
         var factor = GetAnchorFactor(AnchorType);
 
         var anchorPoint = parentPos + (parentSize - Size) * factor;
         var finalPos = anchorPoint + scaledOffset;
-        AbsoluteBounds = new Rectangle(finalPos.X, finalPos.Y, scaledSize.X, scaledSize.Y);
+        FinalBounds = new Rectangle(finalPos.X, finalPos.Y, scaledSize.X, scaledSize.Y);
     }
     
     private static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
@@ -106,10 +107,10 @@ public abstract class UiElement {
     };
     
     internal void AssignLayoutBounds(Rectangle bounds) {
-        var parentScale = Parent?.AbsoluteScale ?? Vector2.One;
-        AbsoluteScale = parentScale * Scale;
+        var parentScale = Parent?.FinalScale ?? Vector2.One;
+        FinalScale = parentScale * Scale;
         
-        AbsoluteBounds = bounds;
+        FinalBounds = bounds;
         IsLayoutManaged = true;
     }
 }

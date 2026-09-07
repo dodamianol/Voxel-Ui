@@ -70,19 +70,19 @@ namespace VoxelUiDemo.ui.elements {
         protected override void CalculateOwnLayout() {
             base.CalculateOwnLayout();
             
-            var barWidth = AbsoluteBounds.Width * 0.8f;
-            var barHeight = AbsoluteBounds.Height * 0.1f;
-            var barX = AbsoluteBounds.X + 20;//+ (AbsoluteBounds.Width - barWidth) / 2f;
-            var barY = AbsoluteBounds.Y + (AbsoluteBounds.Height - barHeight) / 2f;
+            var barWidth = FinalBounds.Width * 0.8f;
+            var barHeight = FinalBounds.Height * 0.1f;
+            var barX = FinalBounds.X + 20;//+ (AbsoluteBounds.Width - barWidth) / 2f;
+            var barY = FinalBounds.Y + (FinalBounds.Height - barHeight) / 2f;
             Bar.AssignLayoutBounds(new Rectangle(barX, barY, barWidth, barHeight));
 
             if (_isBeingDragged) Handle.BackgroundColor = PressedColor;
             else if (Handle.IsHovered) Handle.BackgroundColor = HighlightColor;
             else if (!Handle.IsHovered) Handle.BackgroundColor = NormalColor;
             
-            var handleWidth = (AbsoluteBounds.Height * 0.8f) / 2;
-            var handleHeight = AbsoluteBounds.Height * 0.8f;
-            var handleY = AbsoluteBounds.Y + (AbsoluteBounds.Height - handleHeight) / 2f;
+            var handleWidth = (FinalBounds.Height * 0.8f) / 2;
+            var handleHeight = FinalBounds.Height * 0.8f;
+            var handleY = FinalBounds.Y + (FinalBounds.Height - handleHeight) / 2f;
             _minX = barX;
             _maxX = barX + barWidth - handleWidth;
             var handleX = _minX + (_maxX - _minX) * Value;
@@ -93,16 +93,16 @@ namespace VoxelUiDemo.ui.elements {
         }
         
         public override bool ContainsPoint(Vector2 point) {
-            return Raylib.CheckCollisionPointRec(point, AbsoluteBounds);
+            return Raylib.CheckCollisionPointRec(point, FinalBounds);
         }
 
         public void OnDragStart(Vector2 mousePos) {
             _isBeingDragged = true;
-            if (Raylib.CheckCollisionPointRec(mousePos, Handle.AbsoluteBounds)) {
-                _xOffsetToHandlePos = mousePos.X - Handle.AbsoluteBounds.X;
+            if (Raylib.CheckCollisionPointRec(mousePos, Handle.FinalBounds)) {
+                _xOffsetToHandlePos = mousePos.X - Handle.FinalBounds.X;
             } 
-            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.AbsoluteBounds)) {
-                _xOffsetToHandlePos = Handle.AbsoluteBounds.Width / 2f;
+            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.FinalBounds)) {
+                _xOffsetToHandlePos = Handle.FinalBounds.Width / 2f;
                 OnDrag(mousePos);
             }
         }

@@ -12,8 +12,8 @@ public class UiGridPanel :  UiElement {
         base.CalculateOwnLayout();
         
         var countInCurrentRow = 0;
-        var xPos = AbsoluteBounds.X;
-        var yPos = AbsoluteBounds.Y;
+        var xPos = FinalBounds.X;
+        var yPos = FinalBounds.Y;
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
@@ -33,12 +33,12 @@ public class UiGridPanel :  UiElement {
             if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
 
             if (PrimaryOrientation == Orientation.Horizontal) {
-                xPos = AbsoluteBounds.X;    
+                xPos = FinalBounds.X;    
                 yPos += SpacingY;
             }
             else {
                 xPos += + SpacingX;
-                yPos =  AbsoluteBounds.Y;
+                yPos =  FinalBounds.Y;
             }
             countInCurrentRow = 0;
         }
