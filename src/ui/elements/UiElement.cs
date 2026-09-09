@@ -82,26 +82,13 @@ public abstract class UiElement {
         var scaledSize = Vector2I.Round(Transform.Size * finalScale);
         var scaledOffset = Vector2I.Round(Transform.Offset * finalScale);
         
-        var factor = GetAnchorFactor(AnchorType);
+        var factor = AnchorType.GetFactor();
 
         var anchorPoint = parentPos + Vector2I.Round((parentSize - Transform.Size) * factor);
         var finalPos = anchorPoint + scaledOffset;
         FinalTransform = new Transform{Offset = finalPos, Size = scaledSize, Scale = finalScale};
     }
-    
-    private static Vector2 GetAnchorFactor(AnchorType anchor) => anchor switch {
-        AnchorType.TopLeft      => new Vector2(0f, 0f),
-        AnchorType.TopCenter    => new Vector2(0.5f, 0f),
-        AnchorType.TopRight     => new Vector2(1f, 0f),
-        AnchorType.MiddleLeft   => new Vector2(0f, 0.5f),
-        AnchorType.Center       => new Vector2(0.5f, 0.5f),
-        AnchorType.MiddleRight  => new Vector2(1f, 0.5f),
-        AnchorType.BottomLeft   => new Vector2(0f, 1f),
-        AnchorType.BottomCenter => new Vector2(0.5f, 1f),
-        AnchorType.BottomRight  => new Vector2(1f, 1f),
-        _ => throw new ArgumentOutOfRangeException(nameof(anchor))
-    };
-    
+       
     internal void AssignTransform(Transform transform) {
         var parentScale = Parent?.FinalTransform.Scale ?? Vector2.One;
         FinalTransform = FinalTransform.WithScale(parentScale * Transform.Scale);

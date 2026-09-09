@@ -7,9 +7,9 @@ namespace VoxelUiDemo.ui;
 public struct Transform {
     public Transform() { }
 
-    public Vector2I Offset { get; set; } = new Vector2I(0, 0);
-    public Vector2I Size { get; set; } = new  Vector2I(100, 100);
-    public Vector2 Scale { get; set; } = Vector2.One;
+    public Vector2I Offset = new(0, 0);
+    public Vector2I Size = new(100, 100);
+    public Vector2 Scale = Vector2.One;
 
     public Rectangle ToRectangle() {
         return new Rectangle(Offset.X, Offset.Y, Size.X, Size.Y);
