@@ -1,23 +1,24 @@
-﻿using Rectangle = Raylib_cs.Rectangle;
+﻿using VoxelUiDemo.voxel_engine;
+using Rectangle = Raylib_cs.Rectangle;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiStackPanel :  UiElement {
     public Orientation Orientation = Orientation.Horizontal;
-    public float Spacing { get; set; } = 10;
+    public int Spacing { get; set; } = 10;
     
     protected override void CalculateOwnLayout() {
         base.CalculateOwnLayout();
 
-        var cursor = (Orientation == Orientation.Horizontal) ? FinalBounds.X : FinalBounds.Y;
+        var cursor = (Orientation == Orientation.Horizontal) ? FinalTransform.Offset.X : FinalTransform.Offset.Y;
 
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
 
-            var nextBounds = (Orientation == Orientation.Horizontal) ?
-                new Rectangle(cursor, FinalBounds.Y, child.Size.X, child.Size.Y) :
-                new Rectangle(FinalBounds.X, cursor, child.Size.X, child.Size.Y);
-            child.AssignLayoutBounds(nextBounds);
+            var nextTransform = (Orientation == Orientation.Horizontal) ?
+                new Transform{ Offset = new Vector2I(cursor, FinalTransform.Offset.Y), Size = child.Transform.Size } : 
+                new Transform{ Offset = new Vector2I(FinalTransform.Offset.X, cursor), Size = child.Transform.Size };
+            child.AssignTransform(nextTransform);
             
             child.CalculateLayout();
 

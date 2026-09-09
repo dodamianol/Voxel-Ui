@@ -1,24 +1,27 @@
 ﻿using Raylib_cs;
+using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiGridPanel :  UiElement {
     public Orientation PrimaryOrientation = Orientation.Horizontal;
-    public float SpacingX { get; init; } = 10;
-    public float SpacingY { get; init; } = 10;
+    public int SpacingX { get; init; } = 10;
+    public int SpacingY { get; init; } = 10;
     public int ElementsPerPrimarayDimension { get; init; } = 3;
 
     protected override void CalculateOwnLayout() {
         base.CalculateOwnLayout();
         
         var countInCurrentRow = 0;
-        var xPos = FinalBounds.X;
-        var yPos = FinalBounds.Y;
+        var xPos = FinalTransform.Offset.X;
+        var yPos = FinalTransform.Offset.Y;
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
-            var nextBounds = new Rectangle(xPos, yPos, child.Size.X, child.Size.Y);
-            child.AssignLayoutBounds(nextBounds);
+            var nextTransform = new Transform {
+                Offset = new Vector2I(xPos, yPos), Size = child.Transform.Size
+            };
+            child.AssignTransform(nextTransform);
             
             child.CalculateLayout();
 
@@ -33,12 +36,12 @@ public class UiGridPanel :  UiElement {
             if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
 
             if (PrimaryOrientation == Orientation.Horizontal) {
-                xPos = FinalBounds.X;    
+                xPos = FinalTransform.Offset.X;    
                 yPos += SpacingY;
             }
             else {
-                xPos += + SpacingX;
-                yPos =  FinalBounds.Y;
+                xPos += SpacingX;
+                yPos = FinalTransform.Offset.Y;
             }
             countInCurrentRow = 0;
         }

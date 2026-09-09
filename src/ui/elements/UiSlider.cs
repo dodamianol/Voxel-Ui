@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Raylib_cs;
+using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements {
     public class UiSlider : UiElement, Draggable {
@@ -56,53 +57,63 @@ namespace VoxelUiDemo.ui.elements {
         private float _minX, _maxX;
 
         public UiSlider() {
-            Size = new Vector2(500, 50);
+            Transform = new Transform{ Size = new Vector2I(500, 50) };
 
             Bar = new UiPanel { BackgroundColor = Color.LightGray, BlocksInput = false };
             Handle = new UiPanel { BackgroundColor = NormalColor, BlocksInput = false };
             Text = new UiText {
                 AnchorType = AnchorType.MiddleRight, BackgroundColor = new Color(0, 0, 0, 25), BlocksInput =  false,
-                Text = "0,00", AlignH = TextAlignmentHorizontal.Right, Offset = new Vector2(-15, 0)
+                Text = "0,00", AlignH = TextAlignmentHorizontal.Right, 
+                Transform = new Transform{ Offset = new Vector2I(-15, 0) }
             };
             BarHighlighter = new UiPanel { BackgroundColor = Color.DarkGreen, BlocksInput = false };
         }
 
         protected override void CalculateOwnLayout() {
             base.CalculateOwnLayout();
-            
-            var barWidth = FinalBounds.Width * 0.8f;
-            var barHeight = FinalBounds.Height * 0.1f;
-            var barX = FinalBounds.X + 20;//+ (AbsoluteBounds.Width - barWidth) / 2f;
-            var barY = FinalBounds.Y + (FinalBounds.Height - barHeight) / 2f;
-            Bar.AssignLayoutBounds(new Rectangle(barX, barY, barWidth, barHeight));
+
+            var barWidth = FinalTransform.Size.X * 0.8f;
+            var barHeight = FinalTransform.Size.Y * 0.1f;
+            var barX = FinalTransform.Offset.X + 20;
+            var barY = FinalTransform.Offset.Y + (FinalTransform.Size.Y - barHeight) / 2f;
+            Bar.AssignTransform(new Transform {
+                Offset = Vector2I.Round(new Vector2(barX, barY)), 
+                Size = Vector2I.Round(new Vector2(barWidth, barHeight))
+            });
 
             if (_isBeingDragged) Handle.BackgroundColor = PressedColor;
             else if (Handle.IsHovered) Handle.BackgroundColor = HighlightColor;
             else if (!Handle.IsHovered) Handle.BackgroundColor = NormalColor;
             
-            var handleWidth = (FinalBounds.Height * 0.8f) / 2;
-            var handleHeight = FinalBounds.Height * 0.8f;
-            var handleY = FinalBounds.Y + (FinalBounds.Height - handleHeight) / 2f;
+            var handleWidth = (FinalTransform.Size.Y * 0.8f) / 2;
+            var handleHeight = FinalTransform.Size.Y * 0.8f;
+            var handleY = FinalTransform.Offset.Y + (FinalTransform.Size.Y - handleHeight) / 2f;
             _minX = barX;
             _maxX = barX + barWidth - handleWidth;
             var handleX = _minX + (_maxX - _minX) * Value;
-            Handle.AssignLayoutBounds(new Rectangle(handleX, handleY, handleWidth, handleHeight));
-
+            Handle.AssignTransform(new Transform {
+                Offset = Vector2I.Round(new Vector2(handleX, handleY)), 
+                Size = Vector2I.Round(new Vector2(handleWidth, handleHeight))
+            });
+            
             var barHighlighterWidth = handleX - barX;
-            BarHighlighter.AssignLayoutBounds(new Rectangle(barX, barY, barHighlighterWidth, barHeight));
+            BarHighlighter.AssignTransform(new Transform {
+                Offset = Vector2I.Round(new Vector2(barX, barY)), 
+                Size = Vector2I.Round(new Vector2(barHighlighterWidth, barHeight))
+            });
         }
         
         public override bool ContainsPoint(Vector2 point) {
-            return Raylib.CheckCollisionPointRec(point, FinalBounds);
+            return Raylib.CheckCollisionPointRec(point, FinalTransform.ToRectangle());
         }
 
         public void OnDragStart(Vector2 mousePos) {
             _isBeingDragged = true;
-            if (Raylib.CheckCollisionPointRec(mousePos, Handle.FinalBounds)) {
-                _xOffsetToHandlePos = mousePos.X - Handle.FinalBounds.X;
+            if (Raylib.CheckCollisionPointRec(mousePos, Handle.FinalTransform.ToRectangle())) {
+                _xOffsetToHandlePos = mousePos.X - Handle.FinalTransform.Offset.X;
             } 
-            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.FinalBounds)) {
-                _xOffsetToHandlePos = Handle.FinalBounds.Width / 2f;
+            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.FinalTransform.ToRectangle())) {
+                _xOffsetToHandlePos = Handle.FinalTransform.Size.X / 2f;
                 OnDrag(mousePos);
             }
         }

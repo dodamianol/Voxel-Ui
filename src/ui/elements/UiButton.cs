@@ -28,8 +28,8 @@ public class UiButton : UiElement, Clickable {
 
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
-            Position = new Vector2(FinalBounds.X, FinalBounds.Y),
-            Size = new Vector2(FinalBounds.Width, FinalBounds.Height),
+            Position = FinalTransform.Offset,
+            Size = FinalTransform.Size,
             Color = renderColor
         });
     }

@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -28,33 +29,33 @@ public class UiText : UiElement {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawText,
             Text = Text,
-            Position = new Vector2(drawX, drawY),
+            Position = Vector2I.Round(new Vector2(drawX, drawY)),
             FontSize = FontSize,
             Color = TextColor
         });
     }
 
     private float getXPos(int textWidth) {
-        var drawX = FinalBounds.X;
+        float drawX = FinalTransform.Offset.X;
 
         if (AlignH == TextAlignmentHorizontal.Center) {
-            drawX += (FinalBounds.Width - textWidth) / 2f;
+            drawX += (FinalTransform.Size.X - textWidth) / 2f;
         }
         else if (AlignH == TextAlignmentHorizontal.Right) {
-            drawX += FinalBounds.Width - textWidth;
+            drawX += FinalTransform.Size.X - textWidth;
         }
 
         return drawX;
     }
 
     private float getYPos(int textHeight) {
-        var drawY = FinalBounds.Y;
+        float drawY = FinalTransform.Offset.Y;
 
         if (AlignV == TextAlignmentVertical.Center) {
-            drawY += (FinalBounds.Height - textHeight) / 2f;
+            drawY += (FinalTransform.Size.Y - textHeight) / 2f;
         } 
         else if (AlignV == TextAlignmentVertical.Bottom) {
-            drawY += FinalBounds.Height - textHeight;
+            drawY += FinalTransform.Size.Y - textHeight;
         }
 
         return drawY;

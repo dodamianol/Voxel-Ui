@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace VoxelUiDemo.voxel_engine;
@@ -26,10 +27,19 @@ public readonly struct Vector2I(int x, int y) : IEquatable<Vector2I> {
     public static Vector2I operator *(int a, Vector2I b) => new(b.X * a, b.Y * a);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 operator *(Vector2I a, Vector2 b) => new(a.X * b.X, a.Y * b.Y);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 operator *(Vector2 b, Vector2I a) => new(a.X * b.X, a.Y * b.Y);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2I operator /(Vector2I a, int b) => new(a.X / b, a.Y / b);
     
     public static bool operator ==(Vector2I left, Vector2I right) => left.Equals(right);
     public static bool operator !=(Vector2I left, Vector2I right) => !left.Equals(right);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2I Round(Vector2 v) => new((int)MathF.Round(v.X), (int)MathF.Round(v.Y));
 
     public override bool Equals(object? obj) => obj is Vector2I other && Equals(other);
     public bool Equals(Vector2I other) => X == other.X && Y == other.Y;

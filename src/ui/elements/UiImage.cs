@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -12,8 +13,8 @@ public class UiImage : UiElement {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawTexture,
             Texture = Texture,
-            Position = new Vector2(FinalBounds.X, FinalBounds.Y),
-            Size = new Vector2(FinalBounds.Width, FinalBounds.Height),
+            Position = FinalTransform.Offset,
+            Size = FinalTransform.Size,
             Color = Tint
         });
     }

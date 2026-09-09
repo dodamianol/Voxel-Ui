@@ -2,6 +2,8 @@
 using Raylib_cs;
 using VoxelUiDemo.ui;
 using VoxelUiDemo.ui.elements;
+using VoxelUiDemo.voxel_engine;
+using Transform = VoxelUiDemo.ui.Transform;
 
 namespace VoxelUiDemo;
 
@@ -19,8 +21,7 @@ static class Program {
         
         var rootCanvas = new UiPanel {
             AnchorType = AnchorType.Center,
-            Offset = new Vector2(0, 0),
-            Size = new Vector2(screenWidth, screenHeight),
+            Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) },
             BackgroundColor = Color.DarkGray
         };
 
