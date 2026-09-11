@@ -22,8 +22,6 @@ public abstract class UiElement {
     public bool IsHovered;
     public bool BlocksInput { get; set; } = true;
     
-    private bool IsLayoutManaged { get; set; } 
-
     public void AddChild(UiElement child) {
         child.Parent = this;
         Children.Add(child);
@@ -64,9 +62,7 @@ public abstract class UiElement {
     public void CalculateLayout() {
         if (!IsVisible) return;
 
-        if (!IsLayoutManaged) {
-            CalculateOwnLayout();
-        }
+        CalculateOwnLayout();
 
         foreach (var child in Children) {
             child.CalculateLayout();
@@ -79,21 +75,20 @@ public abstract class UiElement {
 
         var parentScale = Parent?.FinalTransform.Scale ?? Vector2.One;
         var finalScale = parentScale * Transform.Scale;        
+    
         var scaledSize = Vector2I.Round(Transform.Size * finalScale);
-        var scaledOffset = Vector2I.Round(Transform.Offset * finalScale);
-        
+        var scaledOffset = Vector2I.Round(Transform.Offset * parentScale);
+    
         var factor = AnchorType.GetFactor();
 
-        var anchorPoint = parentPos + Vector2I.Round((parentSize - Transform.Size) * factor);
+        var anchorPoint = parentPos + Vector2I.Round((parentSize - scaledSize) * factor);
         var finalPos = anchorPoint + scaledOffset;
-        FinalTransform = new Transform{Offset = finalPos, Size = scaledSize, Scale = finalScale};
+    
+        FinalTransform = new Transform { Offset = finalPos, Size = scaledSize, Scale = finalScale };
     }
        
     internal void AssignTransform(Transform transform) {
         var parentScale = Parent?.FinalTransform.Scale ?? Vector2.One;
-        FinalTransform = FinalTransform.WithScale(parentScale * Transform.Scale);
-        
-        FinalTransform = transform;
-        IsLayoutManaged = true;
+        Transform = transform.WithScale(parentScale * transform.Scale);
     }
 }

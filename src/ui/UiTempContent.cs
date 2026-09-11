@@ -63,7 +63,6 @@ public static class UiTempContent {
     
         for (var i = 0; i < 9; i++) {
             var stackPanelChild = new UiPanel() {
-                AnchorType = AnchorType.Center,
                 Transform = new Transform{ Size = new Vector2I(100, 100) }, 
                 BackgroundColor = Color.Orange
             };
@@ -84,7 +83,7 @@ public static class UiTempContent {
         
         for (var i = 0; i < 11; i++) {
             var stackPanelChild = new UiPanel() {
-                AnchorType = AnchorType.Center,
+                AnchorType = AnchorType.TopLeft,
                 Transform = new Transform{ Size = new Vector2I(100, 100) }, 
                 BackgroundColor = Color.Orange
             };
@@ -116,7 +115,7 @@ public static class UiTempContent {
         
         var sliderBackground2 = new UiPanel() {
             AnchorType = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(20, 95), Size = new Vector2I(500, 50), Scale = new Vector2(1.5f) },
+            Transform = new Transform{ Offset = new Vector2I(20, 95), Size = new Vector2I(500, 50), Scale = new Vector2(1.1f) },
             BackgroundColor = Color.Brown,
             
         };

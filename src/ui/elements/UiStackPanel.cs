@@ -10,17 +10,17 @@ public class UiStackPanel :  UiElement {
     protected override void CalculateOwnLayout() {
         base.CalculateOwnLayout();
 
-        var cursor = (Orientation == Orientation.Horizontal) ? FinalTransform.Offset.X : FinalTransform.Offset.Y;
+        var cursor = (Orientation == Orientation.Horizontal) ? Transform.Offset.X : Transform.Offset.Y;
 
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
 
             var nextTransform = (Orientation == Orientation.Horizontal) ?
-                new Transform{ Offset = new Vector2I(cursor, FinalTransform.Offset.Y), Size = child.Transform.Size } : 
-                new Transform{ Offset = new Vector2I(FinalTransform.Offset.X, cursor), Size = child.Transform.Size };
+                new Transform{ Offset = new Vector2I(cursor, Transform.Offset.Y), Size = child.Transform.Size } : 
+                new Transform{ Offset = new Vector2I(Transform.Offset.X, cursor), Size = child.Transform.Size };
             child.AssignTransform(nextTransform);
             
-            child.CalculateLayout();
+            // child.CalculateLayout();
 
             cursor += Spacing;
         }

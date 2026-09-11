@@ -13,8 +13,8 @@ public class UiGridPanel :  UiElement {
         base.CalculateOwnLayout();
         
         var countInCurrentRow = 0;
-        var xPos = FinalTransform.Offset.X;
-        var yPos = FinalTransform.Offset.Y;
+        var xPos = 0;//Transform.Offset.X;
+        var yPos = 0;//Transform.Offset.Y;
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
@@ -23,7 +23,7 @@ public class UiGridPanel :  UiElement {
             };
             child.AssignTransform(nextTransform);
             
-            child.CalculateLayout();
+            // child.CalculateLayout();
 
             if (PrimaryOrientation == Orientation.Horizontal) {
                 xPos += SpacingX;
@@ -36,12 +36,12 @@ public class UiGridPanel :  UiElement {
             if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
 
             if (PrimaryOrientation == Orientation.Horizontal) {
-                xPos = FinalTransform.Offset.X;    
+                xPos = Transform.Offset.X;    
                 yPos += SpacingY;
             }
             else {
                 xPos += SpacingX;
-                yPos = FinalTransform.Offset.Y;
+                yPos = Transform.Offset.Y;
             }
             countInCurrentRow = 0;
         }

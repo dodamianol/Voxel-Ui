@@ -72,10 +72,10 @@ namespace VoxelUiDemo.ui.elements {
         protected override void CalculateOwnLayout() {
             base.CalculateOwnLayout();
 
-            var barWidth = FinalTransform.Size.X * 0.8f;
-            var barHeight = FinalTransform.Size.Y * 0.1f;
-            var barX = FinalTransform.Offset.X + 20;
-            var barY = FinalTransform.Offset.Y + (FinalTransform.Size.Y - barHeight) / 2f;
+            var barWidth = Transform.Size.X * 0.8f;
+            var barHeight = Transform.Size.Y * 0.1f;
+            var barX = 20;
+            var barY = Transform.Offset.Y + (Transform.Size.Y - barHeight) / 2f;
             Bar.AssignTransform(new Transform {
                 Offset = Vector2I.Round(new Vector2(barX, barY)), 
                 Size = Vector2I.Round(new Vector2(barWidth, barHeight))
@@ -85,9 +85,9 @@ namespace VoxelUiDemo.ui.elements {
             else if (Handle.IsHovered) Handle.BackgroundColor = HighlightColor;
             else if (!Handle.IsHovered) Handle.BackgroundColor = NormalColor;
             
-            var handleWidth = (FinalTransform.Size.Y * 0.8f) / 2;
-            var handleHeight = FinalTransform.Size.Y * 0.8f;
-            var handleY = FinalTransform.Offset.Y + (FinalTransform.Size.Y - handleHeight) / 2f;
+            var handleWidth = (Transform.Size.Y * 0.8f) / 2;
+            var handleHeight = Transform.Size.Y * 0.8f;
+            var handleY = Transform.Offset.Y + ( Transform.Size.Y - handleHeight) / 2f; // this space is neccessary for daniels .dll to work
             _minX = barX;
             _maxX = barX + barWidth - handleWidth;
             var handleX = _minX + (_maxX - _minX) * Value;
@@ -109,6 +109,7 @@ namespace VoxelUiDemo.ui.elements {
 
         public void OnDragStart(Vector2 mousePos) {
             _isBeingDragged = true;
+            
             if (Raylib.CheckCollisionPointRec(mousePos, Handle.FinalTransform.ToRectangle())) {
                 _xOffsetToHandlePos = mousePos.X - Handle.FinalTransform.Offset.X;
             } 
@@ -119,17 +120,17 @@ namespace VoxelUiDemo.ui.elements {
         }
 
         public void OnDrag(Vector2 mousePos) {
-            var newX = mousePos.X - _xOffsetToHandlePos;
-            newX = Math.Clamp(newX, _minX, _maxX);
-            
-            // Handle.AssignLayoutBounds(Handle.AbsoluteBounds with { X = newX });
-            
+            var desiredGlobalHandleX = mousePos.X - _xOffsetToHandlePos;
+            var localNewX = desiredGlobalHandleX - FinalTransform.Offset.X;
+            localNewX = Math.Clamp(localNewX, _minX, _maxX);
+    
             var newValue = 0f;
             if (_maxX > _minX) {
-                newValue = (newX - _minX) / (_maxX - _minX);
+                newValue = (localNewX - _minX) / (_maxX - _minX);
             }
 
             if (!(Math.Abs(Value - newValue) > 0.001f)) return;
+    
             Value = newValue;
             OnValueChanged?.Invoke(Value);
             _text.Text = Value.ToString("0.00");
@@ -139,26 +140,5 @@ namespace VoxelUiDemo.ui.elements {
             _isBeingDragged = false;
             _xOffsetToHandlePos = 0;
         }
-        
-        /*
-        protected override void RenderSelf(List<UiRenderCommand> commands) {
-            commands.Add(new UiRenderCommand {
-                Type = CommandType.DrawRect,
-                Position = _barPos,
-                Size = new Vector2(_barWidth, _barHeight),
-                Color = Color.DarkGray
-            });
-
-            var color = NormalColor;
-            if (_isBeingDragged) color = PressedColor;
-            else if (IsHovered) color  = HighlightColor;
-            
-            commands.Add(new UiRenderCommand {
-                Type = CommandType.DrawRect,
-                Position = new Vector2(_handleBounds.X, _handleBounds.Y),
-                Size = new Vector2(_handleBounds.Width, _handleBounds.Height),
-                Color = color
-            });
-        }*/
     }
 }
