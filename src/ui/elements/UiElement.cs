@@ -58,38 +58,22 @@ public abstract class UiElement {
     public void CalculateLayout() {
         if (!IsVisible) return;
 
-        CalculateOwnLayout();
+        var currentLayout = Layout;
+        currentLayout.Calculate(Parent?.Layout.FinalTransform, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        Layout = currentLayout;
 
+        ArrangeChildren();
+        
         foreach (var child in Children) {
             child.CalculateLayout();
         }
     }
-
-    protected virtual void CalculateOwnLayout() {
-        var parentPos = Parent?.Layout.FinalTransform.Offset ?? Vector2I.Zero;
-        var parentSize = Parent?.Layout.FinalTransform.Size ?? new Vector2I(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-
-        var parentScale = Parent?.Layout.FinalTransform.Scale ?? Vector2.One;
-        var finalScale = parentScale * Layout.Transform.Scale;        
     
-        var scaledSize = Vector2I.Round(Layout.Transform.Size * finalScale);
-        var scaledOffset = Vector2I.Round(Layout.Transform.Offset * parentScale);
+    protected virtual void ArrangeChildren() { }
     
-        var factor = Layout.Anchor.GetFactor();
-
-        var anchorPoint = parentPos + Vector2I.Round((parentSize - scaledSize) * factor);
-        var finalPos = anchorPoint + scaledOffset;
-    
-        var currentLayout = Layout;
-        currentLayout.FinalTransform = new Transform { Offset = finalPos, Size = scaledSize, Scale = finalScale };
-        Layout = currentLayout;
-    }
-       
     internal void AssignTransform(Transform transform) {
-        var parentScale = Parent?.Layout.FinalTransform.Scale ?? Vector2.One;
-        
         var currentLayout = Layout;
-        currentLayout.Transform = transform.WithScale(parentScale * transform.Scale);
+        currentLayout.Transform = transform;
         Layout = currentLayout;
     }
 }

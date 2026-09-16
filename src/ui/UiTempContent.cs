@@ -94,39 +94,31 @@ public static class UiTempContent {
     public static void AddSlider(UiElement rootCanvas) {
         var topRight = new UiPanel() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopRight,
-            Transform = new Transform{ Offset = new Vector2I(-50, 50), Size = new Vector2I(750, 250) }},
+            Transform = new Transform{ Offset = new Vector2I(-50, 50), Size = new Vector2I(750, 260) }},
             BackgroundColor = Color.Gray,
         };
         rootCanvas.AddChild(topRight);
 
-        var sliderBackground = new UiPanel() {
-            Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(20, 20), Size = new Vector2I(500, 50) }},
-            BackgroundColor = Color.Brown,
-        };
-        topRight.AddChild(sliderBackground);
-
         var slider = new UiSlider() {
-            Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform{ Size = new Vector2I(500, 50) }},
+            Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
+            Transform = new Transform{ Offset = new Vector2I(25, 25), Size = new Vector2I(500, 50) }},
             BackgroundColor = Color.Orange,
         };
-        sliderBackground.AddChild(slider);
-        
-        var sliderBackground2 = new UiPanel() {
-            Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(20, 95), Size = new Vector2I(500, 50), Scale = new Vector2(1.1f) }},
-            BackgroundColor = Color.Brown,
-            
-        };
-        topRight.AddChild(sliderBackground2);
+        topRight.AddChild(slider);
         
         var slider2 = new UiSlider() {
-            Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform{ Size = new Vector2I(500, 50) }},
+            Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
+            Transform = new Transform{ Offset = new Vector2I(25, 100), Size = new Vector2I(500, 50), Scale = new Vector2(1.1f) }},
             BackgroundColor = Color.Orange,
         };
-        sliderBackground2.AddChild(slider2);
+        topRight.AddChild(slider2);
+        
+        var slider3 = new UiSlider() {
+            Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
+                Transform = new Transform{ Offset = new Vector2I(25, 175), Size = new Vector2I(500, 50), Scale = new Vector2(1.2f) }},
+            BackgroundColor = Color.Orange,
+        };
+        topRight.AddChild(slider3);
     }
 
 }

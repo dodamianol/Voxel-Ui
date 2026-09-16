@@ -72,33 +72,32 @@ namespace VoxelUiDemo.ui.elements {
             BarHighlighter = new UiPanel { BackgroundColor = Color.DarkGreen, BlocksInput = false };
         }
 
-        protected override void CalculateOwnLayout() {
-            base.CalculateOwnLayout();
+        protected override void ArrangeChildren() {
+            var sliderSize = Layout.Transform.Size;
 
-            var barWidth = Layout.Transform.Size.X * 0.8f;
-            var barHeight = Layout.Transform.Size.Y * 0.1f;
-            var barX = 20;
-            var barY = Layout.Transform.Offset.Y + (Layout.Transform.Size.Y - barHeight) / 2f;
+            var barWidth = sliderSize.X * 0.8f;
+            var barHeight = sliderSize.Y * 0.1f;
+            var barX = 20f; 
+            var barY = (sliderSize.Y - barHeight) / 2f;
+    
             Bar.AssignTransform(new Transform {
                 Offset = Vector2I.Round(new Vector2(barX, barY)), 
                 Size = Vector2I.Round(new Vector2(barWidth, barHeight))
             });
 
-            if (_isBeingDragged) Handle.BackgroundColor = PressedColor;
-            else if (Handle.IsHovered) Handle.BackgroundColor = HighlightColor;
-            else if (!Handle.IsHovered) Handle.BackgroundColor = NormalColor;
-            
-            var handleWidth = (Layout.Transform.Size.Y * 0.8f) / 2;
-            var handleHeight = Layout.Transform.Size.Y * 0.8f;
-            var handleY = Layout.Transform.Offset.Y + ( Layout.Transform.Size.Y - handleHeight) / 2f; // this space is neccessary for daniels .dll to work
+            var handleWidth = (sliderSize.Y * 0.8f) / 2;
+            var handleHeight = sliderSize.Y * 0.7f;
+            var handleY = (sliderSize.Y - handleHeight) / 2f;
+    
             _minX = barX;
             _maxX = barX + barWidth - handleWidth;
             var handleX = _minX + (_maxX - _minX) * Value;
+    
             Handle.AssignTransform(new Transform {
                 Offset = Vector2I.Round(new Vector2(handleX, handleY)), 
                 Size = Vector2I.Round(new Vector2(handleWidth, handleHeight))
             });
-            
+    
             var barHighlighterWidth = handleX - barX;
             BarHighlighter.AssignTransform(new Transform {
                 Offset = Vector2I.Round(new Vector2(barX, barY)), 
@@ -124,16 +123,19 @@ namespace VoxelUiDemo.ui.elements {
 
         public void OnDrag(Vector2 mousePos) {
             var desiredGlobalHandleX = mousePos.X - _xOffsetToHandlePos;
-            var localNewX = desiredGlobalHandleX - Layout.FinalTransform.Offset.X;
-            localNewX = Math.Clamp(localNewX, _minX, _maxX);
+            var globalDistance = desiredGlobalHandleX - Layout.FinalTransform.Offset.X;
+            var scaleX = Layout.FinalTransform.Scale.X;
+            var localNewX = globalDistance / scaleX; 
     
+            localNewX = Math.Clamp(localNewX, _minX, _maxX);
+
             var newValue = 0f;
             if (_maxX > _minX) {
                 newValue = (localNewX - _minX) / (_maxX - _minX);
             }
 
             if (!(Math.Abs(Value - newValue) > 0.001f)) return;
-    
+
             Value = newValue;
             OnValueChanged?.Invoke(Value);
             _text.Text = Value.ToString("0.00");

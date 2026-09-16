@@ -9,28 +9,20 @@ public class UiGridPanel :  UiElement {
     public int SpacingY { get; init; } = 10;
     public int ElementsPerPrimarayDimension { get; init; } = 3;
 
-    protected override void CalculateOwnLayout() {
-        base.CalculateOwnLayout();
-        
+    protected override void ArrangeChildren() {
         var countInCurrentRow = 0;
-        var xPos = 0;//Transform.Offset.X;
-        var yPos = 0;//Transform.Offset.Y;
+        var xPos = 0;
+        var yPos = 0;
+        
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
-            var nextTransform = new Transform {
-                Offset = new Vector2I(xPos, yPos), Size = child.Layout.Transform.Size
-            };
+            var nextTransform = new Transform { Offset = new Vector2I(xPos, yPos), Size = child.Layout.Transform.Size };
             child.AssignTransform(nextTransform);
             
-            // child.CalculateLayout();
-
-            if (PrimaryOrientation == Orientation.Horizontal) {
-                xPos += SpacingX;
-            }
-            else {
-                yPos += SpacingY;
-            }
+            if (PrimaryOrientation == Orientation.Horizontal) xPos += SpacingX;
+            else yPos += SpacingY;
+            
             countInCurrentRow++;
 
             if (countInCurrentRow < ElementsPerPrimarayDimension) continue;

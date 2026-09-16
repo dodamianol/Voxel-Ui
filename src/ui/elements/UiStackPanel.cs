@@ -7,9 +7,7 @@ public class UiStackPanel :  UiElement {
     public Orientation Orientation = Orientation.Horizontal;
     public int Spacing { get; set; } = 10;
     
-    protected override void CalculateOwnLayout() {
-        base.CalculateOwnLayout();
-
+    protected override void ArrangeChildren() {
         var cursor = (Orientation == Orientation.Horizontal) ? Layout.Transform.Offset.X : Layout.Transform.Offset.Y;
 
         foreach (var child in Children) {
@@ -20,8 +18,6 @@ public class UiStackPanel :  UiElement {
                 new Transform{ Offset = new Vector2I(Layout.Transform.Offset.X, cursor), Size = child.Layout.Transform.Size };
             child.AssignTransform(nextTransform);
             
-            // child.CalculateLayout();
-
             cursor += Spacing;
         }
     }
