@@ -1,4 +1,4 @@
-namespace VoxelUiDemo.ui.pair_programming;
+namespace VoxelUiDemo.ui.elements;
 
 public struct LayoutComponent {
     public Transform Transform;

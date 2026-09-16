@@ -57,14 +57,17 @@ namespace VoxelUiDemo.ui.elements {
         private float _minX, _maxX;
 
         public UiSlider() {
-            Transform = new Transform{ Size = new Vector2I(500, 50) };
+            var currentLayout = Layout;
+            currentLayout.Transform = new Transform{ Size = new Vector2I(500, 50) };
+            Layout = currentLayout;
 
             Bar = new UiPanel { BackgroundColor = Color.LightGray, BlocksInput = false };
             Handle = new UiPanel { BackgroundColor = NormalColor, BlocksInput = false };
             Text = new UiText {
-                AnchorType = AnchorType.MiddleRight, BackgroundColor = new Color(0, 0, 0, 25), BlocksInput =  false,
-                Text = "0,00", AlignH = TextAlignmentHorizontal.Right, 
-                Transform = new Transform{ Offset = new Vector2I(-15, 0) }
+                Layout = new LayoutComponent { Anchor = AnchorType.MiddleRight, 
+                    Transform = new Transform{ Offset = new Vector2I(-15, 0) } },
+                BackgroundColor = new Color(0, 0, 0, 25), BlocksInput =  false,
+                Text = "0,00", AlignH = TextAlignmentHorizontal.Right,
             };
             BarHighlighter = new UiPanel { BackgroundColor = Color.DarkGreen, BlocksInput = false };
         }
@@ -72,10 +75,10 @@ namespace VoxelUiDemo.ui.elements {
         protected override void CalculateOwnLayout() {
             base.CalculateOwnLayout();
 
-            var barWidth = Transform.Size.X * 0.8f;
-            var barHeight = Transform.Size.Y * 0.1f;
+            var barWidth = Layout.Transform.Size.X * 0.8f;
+            var barHeight = Layout.Transform.Size.Y * 0.1f;
             var barX = 20;
-            var barY = Transform.Offset.Y + (Transform.Size.Y - barHeight) / 2f;
+            var barY = Layout.Transform.Offset.Y + (Layout.Transform.Size.Y - barHeight) / 2f;
             Bar.AssignTransform(new Transform {
                 Offset = Vector2I.Round(new Vector2(barX, barY)), 
                 Size = Vector2I.Round(new Vector2(barWidth, barHeight))
@@ -85,9 +88,9 @@ namespace VoxelUiDemo.ui.elements {
             else if (Handle.IsHovered) Handle.BackgroundColor = HighlightColor;
             else if (!Handle.IsHovered) Handle.BackgroundColor = NormalColor;
             
-            var handleWidth = (Transform.Size.Y * 0.8f) / 2;
-            var handleHeight = Transform.Size.Y * 0.8f;
-            var handleY = Transform.Offset.Y + ( Transform.Size.Y - handleHeight) / 2f; // this space is neccessary for daniels .dll to work
+            var handleWidth = (Layout.Transform.Size.Y * 0.8f) / 2;
+            var handleHeight = Layout.Transform.Size.Y * 0.8f;
+            var handleY = Layout.Transform.Offset.Y + ( Layout.Transform.Size.Y - handleHeight) / 2f; // this space is neccessary for daniels .dll to work
             _minX = barX;
             _maxX = barX + barWidth - handleWidth;
             var handleX = _minX + (_maxX - _minX) * Value;
@@ -104,24 +107,24 @@ namespace VoxelUiDemo.ui.elements {
         }
         
         public override bool ContainsPoint(Vector2 point) {
-            return Raylib.CheckCollisionPointRec(point, FinalTransform.ToRectangle());
+            return Raylib.CheckCollisionPointRec(point, Layout.FinalTransform.ToRectangle());
         }
 
         public void OnDragStart(Vector2 mousePos) {
             _isBeingDragged = true;
             
-            if (Raylib.CheckCollisionPointRec(mousePos, Handle.FinalTransform.ToRectangle())) {
-                _xOffsetToHandlePos = mousePos.X - Handle.FinalTransform.Offset.X;
+            if (Raylib.CheckCollisionPointRec(mousePos, Handle.Layout.FinalTransform.ToRectangle())) {
+                _xOffsetToHandlePos = mousePos.X - Handle.Layout.FinalTransform.Offset.X;
             } 
-            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.FinalTransform.ToRectangle())) {
-                _xOffsetToHandlePos = Handle.FinalTransform.Size.X / 2f;
+            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.Layout.FinalTransform.ToRectangle())) {
+                _xOffsetToHandlePos = Handle.Layout.FinalTransform.Size.X / 2f;
                 OnDrag(mousePos);
             }
         }
 
         public void OnDrag(Vector2 mousePos) {
             var desiredGlobalHandleX = mousePos.X - _xOffsetToHandlePos;
-            var localNewX = desiredGlobalHandleX - FinalTransform.Offset.X;
+            var localNewX = desiredGlobalHandleX - Layout.FinalTransform.Offset.X;
             localNewX = Math.Clamp(localNewX, _minX, _maxX);
     
             var newValue = 0f;

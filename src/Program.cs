@@ -21,8 +21,8 @@ static class Program {
         var screenHeight = Raylib.GetMonitorHeight(0);
         
         var rootCanvas = new UiPanel {
-            AnchorType = AnchorType.Center,
-            Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) },
+            Layout = new LayoutComponent{ Anchor = AnchorType.Center,
+            Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
             BackgroundColor = Color.DarkGray
         };
 

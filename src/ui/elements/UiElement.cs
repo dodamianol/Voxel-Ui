@@ -10,17 +10,13 @@ public abstract class UiElement {
     public UiElement? Parent { get; private set; }
     public List<UiElement> Children { get; } = [];
     
+    public LayoutComponent Layout { get; set; }
     public bool IsVisible { get; init; } = true;
-    
-    public AnchorType AnchorType = AnchorType.TopLeft;
-
-    public Transform Transform { get; set; }
-    public Transform FinalTransform { get; set; }
 
     public Color BackgroundColor { get; set; } = Color.Gray;
     
     public bool IsHovered;
-    public bool BlocksInput { get; set; } = true;
+    public bool BlocksInput { get; set; } = true;   
     
     public void AddChild(UiElement child) {
         child.Parent = this;
@@ -28,7 +24,7 @@ public abstract class UiElement {
     }
     
     public virtual bool ContainsPoint(Vector2 point) {
-        return Raylib.CheckCollisionPointRec(point, FinalTransform.ToRectangle());
+        return Raylib.CheckCollisionPointRec(point, Layout.FinalTransform.ToRectangle());
     }
 
     public virtual void Update(Vector2 mousePos) {
@@ -53,8 +49,8 @@ public abstract class UiElement {
     protected virtual void RenderSelf(List<UiRenderCommand> commands) {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawRect,
-            Position = FinalTransform.Offset,
-            Size = FinalTransform.Size,
+            Position = Layout.FinalTransform.Offset,
+            Size = Layout.FinalTransform.Size,
             Color = BackgroundColor
         });
     }
@@ -70,25 +66,30 @@ public abstract class UiElement {
     }
 
     protected virtual void CalculateOwnLayout() {
-        var parentPos = Parent?.FinalTransform.Offset ?? Vector2I.Zero;
-        var parentSize = Parent?.FinalTransform.Size ?? new Vector2I(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        var parentPos = Parent?.Layout.FinalTransform.Offset ?? Vector2I.Zero;
+        var parentSize = Parent?.Layout.FinalTransform.Size ?? new Vector2I(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
 
-        var parentScale = Parent?.FinalTransform.Scale ?? Vector2.One;
-        var finalScale = parentScale * Transform.Scale;        
+        var parentScale = Parent?.Layout.FinalTransform.Scale ?? Vector2.One;
+        var finalScale = parentScale * Layout.Transform.Scale;        
     
-        var scaledSize = Vector2I.Round(Transform.Size * finalScale);
-        var scaledOffset = Vector2I.Round(Transform.Offset * parentScale);
+        var scaledSize = Vector2I.Round(Layout.Transform.Size * finalScale);
+        var scaledOffset = Vector2I.Round(Layout.Transform.Offset * parentScale);
     
-        var factor = AnchorType.GetFactor();
+        var factor = Layout.Anchor.GetFactor();
 
         var anchorPoint = parentPos + Vector2I.Round((parentSize - scaledSize) * factor);
         var finalPos = anchorPoint + scaledOffset;
     
-        FinalTransform = new Transform { Offset = finalPos, Size = scaledSize, Scale = finalScale };
+        var currentLayout = Layout;
+        currentLayout.FinalTransform = new Transform { Offset = finalPos, Size = scaledSize, Scale = finalScale };
+        Layout = currentLayout;
     }
        
     internal void AssignTransform(Transform transform) {
-        var parentScale = Parent?.FinalTransform.Scale ?? Vector2.One;
-        Transform = transform.WithScale(parentScale * transform.Scale);
+        var parentScale = Parent?.Layout.FinalTransform.Scale ?? Vector2.One;
+        
+        var currentLayout = Layout;
+        currentLayout.Transform = transform.WithScale(parentScale * transform.Scale);
+        Layout = currentLayout;
     }
 }

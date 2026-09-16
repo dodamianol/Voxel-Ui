@@ -13,8 +13,8 @@ public class UiImage : UiElement {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawTexture,
             Texture = Texture,
-            Position = FinalTransform.Offset,
-            Size = FinalTransform.Size,
+            Position = Layout.FinalTransform.Offset,
+            Size = Layout.FinalTransform.Size,
             Color = Tint
         });
     }
