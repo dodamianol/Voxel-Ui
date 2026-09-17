@@ -20,7 +20,7 @@ static class Program {
         var screenWidth = Raylib.GetMonitorWidth(0);
         var screenHeight = Raylib.GetMonitorHeight(0);
         
-        var rootCanvas = new UiPanel {
+        var rootCanvas = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
             Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
             BackgroundColor = Color.DarkGray
@@ -42,7 +42,7 @@ static class Program {
         Raylib.CloseWindow();
     }
 
-    private static void GameLoop(UiPanel rootCanvas, List<UiRenderCommand> renderCommands) {
+    private static void GameLoop(UiRect rootCanvas, List<UiRenderCommand> renderCommands) {
         var mousePos = Raylib.GetMousePosition();
         rootCanvas.Update(mousePos);
         rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)

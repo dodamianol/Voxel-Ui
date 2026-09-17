@@ -7,7 +7,7 @@ namespace VoxelUiDemo.ui;
 public static class UiTempContent {
 
     public static void AddTopLeft(UiElement rootCanvas) {
-        var topLeft = new UiPanel() {
+        var topLeft = new UiRect() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
             Transform = new Transform{ Size = new Vector2I(500, 500) }},
             BackgroundColor = Color.Gray,
@@ -43,7 +43,7 @@ public static class UiTempContent {
         };
         rootCanvas.AddChild(testTexture);
 
-        var transparentPanel = new UiPanel() {
+        var transparentPanel = new UiRect() {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
             Transform = new Transform{ Offset = new Vector2I(100, 0), Size = new Vector2I(200, 200) }},
             BackgroundColor = new Color(0, 0, 0, 200),
@@ -62,7 +62,7 @@ public static class UiTempContent {
         rootCanvas.AddChild(stackPanel);
     
         for (var i = 0; i < 9; i++) {
-            var stackPanelChild = new UiPanel() {
+            var stackPanelChild = new UiRect() {
                 Layout = new LayoutComponent{ Transform = new Transform{ Size = new Vector2I(100, 100) }}, 
                 BackgroundColor = Color.Orange
             };
@@ -82,7 +82,7 @@ public static class UiTempContent {
         rootCanvas.AddChild(gridPanel);
         
         for (var i = 0; i < 11; i++) {
-            var stackPanelChild = new UiPanel() {
+            var stackPanelChild = new UiRect() {
                 Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
                 Transform = new Transform{ Size = new Vector2I(100, 100) }}, 
                 BackgroundColor = Color.Orange
@@ -92,7 +92,7 @@ public static class UiTempContent {
     }
 
     public static void AddSlider(UiElement rootCanvas) {
-        var topRight = new UiPanel() {
+        var topRight = new UiRect() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopRight,
             Transform = new Transform{ Offset = new Vector2I(-50, 50), Size = new Vector2I(750, 260) }},
             BackgroundColor = Color.Gray,

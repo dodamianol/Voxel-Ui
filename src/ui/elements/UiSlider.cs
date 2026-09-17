@@ -61,14 +61,14 @@ namespace VoxelUiDemo.ui.elements {
             currentLayout.Transform = new Transform{ Size = new Vector2I(500, 50) };
             Layout = currentLayout;
 
-            Bar = new UiPanel { BackgroundColor = Color.LightGray, BlocksInput = false };
-            Handle = new UiPanel { BackgroundColor = NormalColor, BlocksInput = false };
+            Bar = new UiRect { BackgroundColor = Color.LightGray, BlocksInput = false };
+            Handle = new UiRect { BackgroundColor = NormalColor, BlocksInput = false };
             Text = new UiText {
                 Layout = new LayoutComponent { Anchor = AnchorType.MiddleRight, 
                 Transform = new Transform{ Offset = new Vector2I(-15, 0) } },
                 BlocksInput =  false, TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
             };
-            BarHighlighter = new UiPanel { BackgroundColor = Color.DarkGreen, BlocksInput = false };
+            BarHighlighter = new UiRect { BackgroundColor = Color.DarkGreen, BlocksInput = false };
         }
 
         protected override void ArrangeChildren() {
