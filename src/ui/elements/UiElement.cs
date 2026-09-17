@@ -1,8 +1,6 @@
 ﻿using System.Numerics;
 using Raylib_cs;
-using VoxelUiDemo.voxel_engine;
 using Color = Raylib_cs.Color;
-using Rectangle = Raylib_cs.Rectangle;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -11,9 +9,9 @@ public abstract class UiElement {
     public List<UiElement> Children { get; } = [];
     
     public LayoutComponent Layout { get; set; }
+    public RenderComponent? Renderer { get; set; }
+    
     public bool IsVisible { get; init; } = true;
-
-    public Color BackgroundColor { get; set; } = Color.Gray;
     
     public bool IsHovered;
     public bool BlocksInput { get; set; } = true;   
@@ -38,23 +36,14 @@ public abstract class UiElement {
 
     public void CollectRenderCommands(List<UiRenderCommand> commands) {
         if (!IsVisible) return;
-        
-        RenderSelf(commands);
-        
+
+        Renderer?.CollectRenderCommands(commands, Layout);
+
         foreach (var child in Children) {
             child.CollectRenderCommands(commands);
         }
     }
-
-    protected virtual void RenderSelf(List<UiRenderCommand> commands) {
-        commands.Add(new UiRenderCommand {
-            Type = CommandType.DrawRect,
-            Position = Layout.FinalTransform.Offset,
-            Size = Layout.FinalTransform.Size,
-            Color = BackgroundColor
-        });
-    }
-
+    
     public void CalculateLayout() {
         if (!IsVisible) return;
 

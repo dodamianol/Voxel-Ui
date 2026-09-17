@@ -18,7 +18,7 @@ public static class UiTempContent {
         var testButton = new UiButton {
             Layout = new LayoutComponent{ Anchor = AnchorType.BottomRight,
             Transform = new Transform{ Size = new Vector2I(200, 50) }},
-            BackgroundColor = Color.Gold,
+            Renderer = new RectRenderer{ Color = Color.Gold },
             OnClick = () => Console.WriteLine("Button was clicked!"),
             Text = new UiText {
                 Layout = new LayoutComponent{ Anchor = AnchorType.Center,
@@ -57,7 +57,7 @@ public static class UiTempContent {
             Transform = new Transform{ Offset = new Vector2I(0, -50), Size = new Vector2I(1020, 100) }},
             Spacing = 115,
             Orientation = Orientation.Horizontal,
-            BackgroundColor = Color.DarkGray
+            Renderer = new RectRenderer{ Color = Color.DarkGray }
         };
         rootCanvas.AddChild(stackPanel);
     
@@ -102,21 +102,21 @@ public static class UiTempContent {
         var slider = new UiSlider() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
             Transform = new Transform{ Offset = new Vector2I(25, 25), Size = new Vector2I(500, 50) }},
-            BackgroundColor = Color.Orange,
+            Renderer = new RectRenderer{ Color = Color.Orange}
         };
         topRight.AddChild(slider);
         
         var slider2 = new UiSlider() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
             Transform = new Transform{ Offset = new Vector2I(25, 100), Size = new Vector2I(500, 50), Scale = new Vector2(1.1f) }},
-            BackgroundColor = Color.Orange,
+            Renderer = new RectRenderer{ Color = Color.Orange}
         };
         topRight.AddChild(slider2);
         
         var slider3 = new UiSlider() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-                Transform = new Transform{ Offset = new Vector2I(25, 175), Size = new Vector2I(500, 50), Scale = new Vector2(1.2f) }},
-            BackgroundColor = Color.Orange,
+            Transform = new Transform{ Offset = new Vector2I(25, 175), Size = new Vector2I(500, 50), Scale = new Vector2(1.2f) }},
+            Renderer = new RectRenderer{ Color = Color.Orange},
         };
         topRight.AddChild(slider3);
     }

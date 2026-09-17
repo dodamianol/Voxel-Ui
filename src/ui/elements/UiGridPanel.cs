@@ -4,6 +4,9 @@ using VoxelUiDemo.voxel_engine;
 namespace VoxelUiDemo.ui.elements;
 
 public class UiGridPanel :  UiElement {
+    
+    //TODO: make uipanel as background 
+    
     public Orientation PrimaryOrientation = Orientation.Horizontal;
     public int SpacingX { get; init; } = 10;
     public int SpacingY { get; init; } = 10;

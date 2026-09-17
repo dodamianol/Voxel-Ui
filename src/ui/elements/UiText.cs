@@ -1,63 +1,19 @@
 ﻿using Raylib_cs;
-using System.Numerics;
-using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiText : UiElement {
-    public string Text { get; set; } = "";
-    public int FontSize { get; set; } = 20;
-    public Color TextColor { get; set; } = Color.White;
-    
-    public TextAlignmentHorizontal AlignH { get; set; } = TextAlignmentHorizontal.Center;
-    public TextAlignmentVertical AlignV { get; set; } = TextAlignmentVertical.Center;
+    private readonly TextRenderer _textRenderer;
+
+    public string Text { get => _textRenderer.Text; set => _textRenderer.Text = value; }
+    public int FontSize { get => _textRenderer.FontSize; set => _textRenderer.FontSize = value; }
+    public Color TextColor { get => _textRenderer.TextColor; set => _textRenderer.TextColor = value; }
+    public TextAlignmentHorizontal AlignH { get => _textRenderer.AlignH; set => _textRenderer.AlignH = value; }
+    public TextAlignmentVertical AlignV { get => _textRenderer.AlignV; set => _textRenderer.AlignV = value; }
 
     public UiText() {
-        BackgroundColor = Color.Blank;
+        _textRenderer = new TextRenderer();
+        Renderer = _textRenderer;
         BlocksInput = false;
-    }
-
-    protected override void RenderSelf(List<UiRenderCommand> commands) {
-        if (string.IsNullOrEmpty(Text)) return;
-
-        var textWidth = Raylib.MeasureText(Text, FontSize);
-        var textHeight = FontSize;
-
-        var drawX = getXPos(textWidth);
-        var drawY = getYPos(textHeight);
-        
-        commands.Add(new UiRenderCommand {
-            Type = CommandType.DrawText,
-            Text = Text,
-            Position = Vector2I.Round(new Vector2(drawX, drawY)),
-            FontSize = FontSize,
-            Color = TextColor
-        });
-    }
-
-    private float getXPos(int textWidth) {
-        float drawX = Layout.FinalTransform.Offset.X;
-
-        if (AlignH == TextAlignmentHorizontal.Center) {
-            drawX += (Layout.FinalTransform.Size.X - textWidth) / 2f;
-        }
-        else if (AlignH == TextAlignmentHorizontal.Right) {
-            drawX += Layout.FinalTransform.Size.X - textWidth;
-        }
-
-        return drawX;
-    }
-
-    private float getYPos(int textHeight) {
-        float drawY = Layout.FinalTransform.Offset.Y;
-
-        if (AlignV == TextAlignmentVertical.Center) {
-            drawY += (Layout.FinalTransform.Size.Y - textHeight) / 2f;
-        } 
-        else if (AlignV == TextAlignmentVertical.Bottom) {
-            drawY += Layout.FinalTransform.Size.Y - textHeight;
-        }
-
-        return drawY;
     }
 }

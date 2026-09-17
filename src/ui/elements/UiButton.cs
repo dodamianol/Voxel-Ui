@@ -22,15 +22,4 @@ public class UiButton : UiElement, Clickable {
             }
         }
     }
-    
-    protected override void RenderSelf(List<UiRenderCommand> commands) {
-        var renderColor = IsHovered ? HighlightColor : BackgroundColor;
-
-        commands.Add(new UiRenderCommand {
-            Type = CommandType.DrawRect,
-            Position = Layout.FinalTransform.Offset,
-            Size = Layout.FinalTransform.Size,
-            Color = renderColor
-        });
-    }
 }

@@ -9,13 +9,13 @@ public class UiImage : UiElement {
 
     public Color Tint { get; set; } = Color.White;
 
-    protected override void RenderSelf(List<UiRenderCommand> commands) {
-        commands.Add(new UiRenderCommand {
-            Type = CommandType.DrawTexture,
-            Texture = Texture,
-            Position = Layout.FinalTransform.Offset,
-            Size = Layout.FinalTransform.Size,
-            Color = Tint
-        });
-    }
+    // protected override void RenderSelf(List<UiRenderCommand> commands) {
+    //     commands.Add(new UiRenderCommand {
+    //         Type = CommandType.DrawTexture,
+    //         Texture = Texture,
+    //         Position = Layout.FinalTransform.Offset,
+    //         Size = Layout.FinalTransform.Size,
+    //         Color = Tint
+    //     });
+    // }
 }
