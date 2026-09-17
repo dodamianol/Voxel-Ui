@@ -16,4 +16,11 @@ public class UiText : UiElement {
         Renderer = _textRenderer;
         BlocksInput = false;
     }
+    
+    public UiText(string text) : this() {
+        Text = text;
+    }
+    public UiText(string text, int fontSize) : this(text) {
+        FontSize = fontSize;
+    }
 }

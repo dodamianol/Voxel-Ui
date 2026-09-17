@@ -64,8 +64,10 @@ namespace VoxelUiDemo.ui.elements {
             Bar = new UiRect { BackgroundColor = Color.LightGray, BlocksInput = false };
             Handle = new UiRect { BackgroundColor = NormalColor, BlocksInput = false };
             Text = new UiText {
-                Layout = new LayoutComponent { Anchor = AnchorType.MiddleRight, 
-                Transform = new Transform{ Offset = new Vector2I(-15, 0) } },
+                Layout = new LayoutComponent { 
+                    Anchor = AnchorType.MiddleRight, 
+                    Transform = new Transform{ Offset = new Vector2I(-15, 0) } 
+                },
                 BlocksInput =  false, TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
             };
             BarHighlighter = new UiRect { BackgroundColor = Color.DarkGreen, BlocksInput = false };

@@ -11,7 +11,6 @@ public class UiImage : UiElement {
     public UiImage() {
         _imageRenderer = new ImageRenderer();
         Renderer = _imageRenderer; 
-        BlocksInput = false;
     }
     
     public UiImage(Texture2D texture) : this() {
