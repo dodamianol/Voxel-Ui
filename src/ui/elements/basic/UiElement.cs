@@ -48,8 +48,10 @@ public abstract class UiElement {
     public void CalculateLayout() {
         if (!IsVisible) return; // TODO: Maybe unnecessary since layout is independent of rendering?
 
-        Layout.Calculate(Parent?.Layout.FinalTransform, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-
+        var currentLayout = Layout;
+        currentLayout.Calculate(Parent?.Layout.FinalTransform, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        Layout = currentLayout;
+        
         ArrangeChildren();
         
         foreach (var child in Children) {
