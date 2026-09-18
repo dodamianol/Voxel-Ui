@@ -9,7 +9,7 @@ using Transform = VoxelUiDemo.ui.Transform;
 namespace VoxelUiDemo;
 
 static class Program {
-    private static Draggable? _activeDragElement = null;
+    private static UiInputSystem input = new UiInputSystem();
     
     private static void Main(string[] args) {
 
@@ -17,24 +17,9 @@ static class Program {
         //Raylib.ToggleFullscreen();
         Raylib.SetTargetFPS(60);
         
-        var screenWidth = Raylib.GetMonitorWidth(0);
-        var screenHeight = Raylib.GetMonitorHeight(0);
-        
-        var rootCanvas = new UiRect {
-            Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
-            BackgroundColor = Color.DarkGray
-        };
-
-        UiTempContent.AddTopLeft(rootCanvas);
-        UiTempContent.AddTexture(rootCanvas);
-        UiTempContent.AddStackPanel(rootCanvas);
-        UiTempContent.AddGridPanel(rootCanvas);
-        UiTempContent.AddSlider(rootCanvas);
-
+        var rootCanvas = UiTempContent.AssembleUI(Raylib.GetMonitorWidth(0), Raylib.GetMonitorHeight(0));
 
         List<UiRenderCommand> renderCommands = [];
-
         while (!Raylib.WindowShouldClose()) {
             GameLoop(rootCanvas, renderCommands);
         }
@@ -42,42 +27,26 @@ static class Program {
         Raylib.CloseWindow();
     }
 
-    private static void GameLoop(UiRect rootCanvas, List<UiRenderCommand> renderCommands) {
+    private static void GameLoop(UiElement rootCanvas, List<UiRenderCommand> renderCommands) {
         var mousePos = Raylib.GetMousePosition();
-        rootCanvas.Update(mousePos);
+        
         rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)
-
-        HandleMouseActions(rootCanvas, mousePos);
+        input.Update(rootCanvas);
+        rootCanvas.Update(mousePos);
         
         renderCommands.Clear();
         rootCanvas.CollectRenderCommands(renderCommands);
         DrawCommands(renderCommands);
     }
     
-    private static void HandleMouseActions(UiElement rootCanvas, Vector2 mousePos) {
-        if (Raylib.IsMouseButtonPressed(MouseButton.Left)) {
-            HandleMouseClick(rootCanvas, mousePos);
-        }
-        
-        else if (Raylib.IsMouseButtonDown(MouseButton.Left)) {
-            _activeDragElement?.OnDrag(mousePos);
-        }
-        
-        else if (Raylib.IsMouseButtonReleased(MouseButton.Left)) {
-            if (_activeDragElement == null) return;
-            
-            _activeDragElement.OnDragEnd();
-            _activeDragElement = null;
-        }
-    }
-
+    
     private static void DrawCommands(List<UiRenderCommand> renderCommands) {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Color.Black);
 
         foreach (var cmd in renderCommands) {
             if (cmd.Type == CommandType.DrawRect) {
-                Raylib.DrawRectangle((int)cmd.Position.X, (int)cmd.Position.Y, (int)cmd.Size.X, (int)cmd.Size.Y, cmd.Color);
+                Raylib.DrawRectangle(cmd.Position.X, cmd.Position.Y, cmd.Size.X, cmd.Size.Y, cmd.Color);
             }
             else if (cmd.Type == CommandType.DrawText) {
                 Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, cmd.FontSize, cmd.Color);
@@ -90,27 +59,5 @@ static class Program {
         }
 
         Raylib.EndDrawing();
-    }
-    
-    private static bool HandleMouseClick(UiElement element, Vector2 mousePos) {
-        if (!element.IsVisible) return false;
-        
-        if (!element.ContainsPoint(mousePos)) return false;
-        
-        for (var i = element.Children.Count - 1; i >= 0; i--) {
-            if (HandleMouseClick(element.Children[i], mousePos)) return true; 
-        }
-        
-        switch (element) {
-            case Draggable draggable:
-                _activeDragElement = draggable;
-                draggable.OnDragStart(mousePos);
-                return true;
-            case Clickable clickable:
-                clickable.OnClickReceived();
-                return true;
-            default:
-                return element.BlocksInput;
-        }
     }
 }

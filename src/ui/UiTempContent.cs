@@ -4,9 +4,25 @@ using VoxelUiDemo.ui.elements;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui;
-public static class UiTempContent {
 
-    public static void AddTopLeft(UiElement rootCanvas) {
+public static class UiTempContent {
+    public static UiElement AssembleUI(int screenWidth, int screenHeight) {
+        var rootCanvas = new UiRect {
+            Layout = new LayoutComponent{ Anchor = AnchorType.Center,
+                Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
+            BackgroundColor = Color.DarkGray
+        };
+
+        AddTopLeft(rootCanvas);
+        AddTexture(rootCanvas);
+        AddStackPanel(rootCanvas);
+        AddGridPanel(rootCanvas);
+        AddSlider(rootCanvas);
+
+        return rootCanvas;
+    }
+    
+    private static void AddTopLeft(UiElement rootCanvas) {
         var topLeft = new UiRect() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
             Transform = new Transform{ Size = new Vector2I(500, 500) }},
@@ -16,13 +32,15 @@ public static class UiTempContent {
         rootCanvas.AddChild(topLeft);
         
         var testButton = new UiButton {
-            Layout = new LayoutComponent{ Anchor = AnchorType.BottomRight,
-            Transform = new Transform{ Size = new Vector2I(200, 50) }},
-            Renderer = new RectRenderer{ Color = Color.Gold },
+            Layout = new LayoutComponent {
+                Anchor = AnchorType.BottomRight, Transform = new Transform { Size = new Vector2I(200, 50) }
+            },
+            NormalColor = Color.Gold,
             OnClick = () => Console.WriteLine("Button was clicked!"),
             Text = new UiText {
-                Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-                Transform = new Transform{ Size = new Vector2I(200, 50) }},
+                Layout = new LayoutComponent {
+                    Anchor = AnchorType.Center, Transform = new Transform { Size = new Vector2I(200, 50) }
+                },
                 Text = "Click me!",
                 FontSize = 24,
                 TextColor = Color.White,
@@ -30,12 +48,11 @@ public static class UiTempContent {
                 AlignV = TextAlignmentVertical.Center
             }
         };
-        
         topLeft.AddChild(testButton);
 
     }
     
-    public static void AddTexture(UiElement rootCanvas) {
+    private static void AddTexture(UiElement rootCanvas) {
         var testTexture = new UiImage() {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
             Transform = new Transform{ Size = new Vector2I(50, 50) }},
@@ -51,7 +68,7 @@ public static class UiTempContent {
         rootCanvas.AddChild(transparentPanel);
     }
 
-    public static void AddStackPanel(UiElement rootCanvas) {
+    private static void AddStackPanel(UiElement rootCanvas) {
         var stackPanel = new UiStackPanel() { 
             Layout = new LayoutComponent{ Anchor = AnchorType.BottomCenter,
             Transform = new Transform{ Offset = new Vector2I(0, -50), Size = new Vector2I(1020, 100) }},
@@ -70,7 +87,7 @@ public static class UiTempContent {
         }
     }
 
-    public static void AddGridPanel(UiElement rootCanvas) {
+    private static void AddGridPanel(UiElement rootCanvas) {
         var gridPanel = new UiGridPanel() {
             Layout = new LayoutComponent{ Anchor = AnchorType.MiddleRight,
             Transform = new Transform{ Offset = new Vector2I(-50, 0), Size = new Vector2I(500, 500) }},
@@ -91,7 +108,7 @@ public static class UiTempContent {
         }
     }
 
-    public static void AddSlider(UiElement rootCanvas) {
+    private static void AddSlider(UiElement rootCanvas) {
         var topRight = new UiRect() {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopRight,
             Transform = new Transform{ Offset = new Vector2I(-50, 50), Size = new Vector2I(750, 260) }},
@@ -120,6 +137,4 @@ public static class UiTempContent {
         };
         topRight.AddChild(slider3);
     }
-
 }
-

@@ -14,7 +14,6 @@ public class UiText : UiElement {
     public UiText() {
         _textRenderer = new TextRenderer();
         Renderer = _textRenderer;
-        BlocksInput = false;
     }
     
     public UiText(string text) : this() {

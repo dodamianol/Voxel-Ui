@@ -3,16 +3,26 @@ using Raylib_cs;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements {
-    public class UiSlider : UiElement, Draggable {
-        public float Value { get; private set; } = 0.5f;
+    public class UiSlider : UiElement {
+        public float Value { get; private set; } = 0.0f;
         public Action<float>? OnValueChanged { get; set; }
         
-        private UiElement _bar = null!;
-        private UiElement _handle = null!;
-        private UiText _text = null!;
-        private UiElement _barHighlighter = null!;
+        public Color NormalColor { get; set; } = Color.Gray;
+        public Color HighlightColor { get; set; } = Color.LightGray;
+        public Color PressedColor { get; set; } = Color.DarkGreen;
 
-        public UiElement Bar {
+        private readonly InteractableComponent _interactable = new();
+        
+        private bool _isBeingDragged = false;
+        private float _xOffsetToHandlePos;
+        private float _minX, _maxX;
+        
+        private UiRect _bar = null!;
+        private UiRect _handle = null!;
+        private UiText _text = null!;
+        private UiRect _barHighlighter = null!;
+
+        public UiRect Bar {
             get => _bar;
             init {
                 if (_bar != null) Children.Remove(_bar);
@@ -21,11 +31,12 @@ namespace VoxelUiDemo.ui.elements {
             }
         }
 
-        public UiElement Handle {
+        public UiRect Handle {
             get => _handle;
             init {
                 if (_handle != null) Children.Remove(_handle);
                 _handle = value;
+                _handle.Interactable = new InteractableComponent{BlocksInput = false};
                 AddChild(_handle);
             }
         }
@@ -39,7 +50,7 @@ namespace VoxelUiDemo.ui.elements {
             }
         }
         
-        public UiElement BarHighlighter {
+        public UiRect BarHighlighter {
             get => _barHighlighter;
             init {
                 if (_barHighlighter != null) Children.Remove(_barHighlighter);
@@ -48,29 +59,27 @@ namespace VoxelUiDemo.ui.elements {
             }
         }
         
-        public Color NormalColor { get; set; } = Color.Gray;
-        public Color HighlightColor { get; set; } = Color.LightGray;
-        public Color PressedColor { get; set; } = Color.DarkGreen;
-        
-        private bool _isBeingDragged = false;
-        private float _xOffsetToHandlePos;
-        private float _minX, _maxX;
-
         public UiSlider() {
+            Interactable = _interactable;
+            _interactable.OnDragStart += OnDragStart;
+            _interactable.OnDrag += OnDrag;
+            _interactable.OnDragEnd += OnDragEnd;
+            
             var currentLayout = Layout;
             currentLayout.Transform = new Transform{ Size = new Vector2I(500, 50) };
             Layout = currentLayout;
 
-            Bar = new UiRect { BackgroundColor = Color.LightGray, BlocksInput = false };
-            Handle = new UiRect { BackgroundColor = NormalColor, BlocksInput = false };
+            Bar = new UiRect { BackgroundColor = Color.LightGray };
+            Handle = new UiRect { BackgroundColor = NormalColor };
             Text = new UiText {
                 Layout = new LayoutComponent { 
                     Anchor = AnchorType.MiddleRight, 
                     Transform = new Transform{ Offset = new Vector2I(-15, 0) } 
                 },
-                BlocksInput =  false, TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
+                TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
             };
-            BarHighlighter = new UiRect { BackgroundColor = Color.DarkGreen, BlocksInput = false };
+            BarHighlighter = new UiRect { BackgroundColor = Color.DarkGreen };
+            
         }
 
         protected override void ArrangeChildren() {
@@ -106,17 +115,13 @@ namespace VoxelUiDemo.ui.elements {
             });
         }
         
-        public override bool ContainsPoint(Vector2 point) {
-            return Raylib.CheckCollisionPointRec(point, Layout.FinalTransform.ToRectangle());
-        }
-
         public void OnDragStart(Vector2 mousePos) {
             _isBeingDragged = true;
             
             if (Raylib.CheckCollisionPointRec(mousePos, Handle.Layout.FinalTransform.ToRectangle())) {
                 _xOffsetToHandlePos = mousePos.X - Handle.Layout.FinalTransform.Offset.X;
             } 
-            else if (Raylib.CheckCollisionPointRec(mousePos, Bar.Layout.FinalTransform.ToRectangle())) {
+            else {
                 _xOffsetToHandlePos = Handle.Layout.FinalTransform.Size.X / 2f;
                 OnDrag(mousePos);
             }
@@ -145,6 +150,18 @@ namespace VoxelUiDemo.ui.elements {
         public void OnDragEnd() {
             _isBeingDragged = false;
             _xOffsetToHandlePos = 0;
+        }
+        
+        public override void Update(Vector2 mousePos) {
+            base.Update(mousePos);
+
+            if (_isBeingDragged) {
+                _handle.BackgroundColor = PressedColor;
+            } else if (_handle.Interactable.IsHovered) {
+                _handle.BackgroundColor = HighlightColor;
+            } else {
+                _handle.BackgroundColor = NormalColor;
+            }
         }
     }
 }
