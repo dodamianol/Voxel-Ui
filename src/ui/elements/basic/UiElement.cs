@@ -61,9 +61,10 @@ public abstract class UiElement {
     
     protected virtual void ArrangeChildren() { }
     
-    internal void AssignTransform(Transform transform) {
+    internal void AssignTransform(Transform transform, AnchorType? anchor = null) {
         var currentLayout = Layout;
         currentLayout.Transform = transform;
+        if (anchor.HasValue) currentLayout.Anchor = anchor.Value;
         Layout = currentLayout;
     }
 }

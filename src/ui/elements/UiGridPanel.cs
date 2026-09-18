@@ -1,5 +1,4 @@
-﻿using Raylib_cs;
-using VoxelUiDemo.voxel_engine;
+﻿using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -8,6 +7,7 @@ public class UiGridPanel :  UiElement {
     //TODO: make uipanel as background 
     
     public Orientation PrimaryOrientation = Orientation.Horizontal;
+    public Vector2I CellSize { get; init; } = new(100, 100);
     public int SpacingX { get; init; } = 10;
     public int SpacingY { get; init; } = 10;
     public int ElementsPerPrimarayDimension { get; init; } = 3;
@@ -20,23 +20,30 @@ public class UiGridPanel :  UiElement {
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
-            var nextTransform = new Transform { Offset = new Vector2I(xPos, yPos), Size = child.Layout.Transform.Size };
-            child.AssignTransform(nextTransform);
-            
-            if (PrimaryOrientation == Orientation.Horizontal) xPos += SpacingX;
-            else yPos += SpacingY;
+            var curTransform = child.Layout.Transform;
+            var nextTransform = curTransform
+                .WithOffset(new Vector2I(xPos, yPos))
+                .WithSize(CellSize);
+            child.AssignTransform(nextTransform, AnchorType.TopLeft);
+
+            if (PrimaryOrientation == Orientation.Horizontal) {
+                xPos += CellSize.X + SpacingX;
+            }
+            else {
+                yPos += CellSize.Y + SpacingY;
+            }
             
             countInCurrentRow++;
 
             if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
 
             if (PrimaryOrientation == Orientation.Horizontal) {
-                xPos = Layout.Transform.Offset.X;    
-                yPos += SpacingY;
+                xPos = 0;
+                yPos += CellSize.Y + SpacingY;
             }
             else {
-                xPos += SpacingX;
-                yPos = Layout.Transform.Offset.Y;
+                xPos += CellSize.X + SpacingX;
+                yPos = 0;
             }
             countInCurrentRow = 0;
         }
