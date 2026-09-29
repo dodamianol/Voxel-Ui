@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui.elements;
+using VoxelUiDemo.ui.elements.basic;
 
 namespace VoxelUiDemo.ui;
 
@@ -12,7 +13,7 @@ public class UiInputSystem {
     private Vector2 _pressPosition;
     private bool _isDragging;
 
-    private const float DragThreshold = 3.0f;
+    private const float DragThreshold = 1.0f;
 
     public void Update(UiElement root) {
         var mousePos = Raylib.GetMousePosition();
@@ -43,8 +44,10 @@ public class UiInputSystem {
         _isDragging = false;
 
         _pressedElement.Interactable.IsPressed = true;
+        _pressedElement.Interactable.OnPress?.Invoke(mousePos);
     }
-
+    
+    
     private void UpdatePress(Vector2 mousePos) {
         if (_pressedElement?.Interactable == null) return;
 
@@ -70,7 +73,7 @@ public class UiInputSystem {
         _pressedElement.Interactable.IsPressed = false;
 
         if (_isDragging) _draggingElement?.Interactable?.OnDragEnd?.Invoke();
-        else if (_hoveredElement == _pressedElement) _pressedElement.Interactable.OnClick?.Invoke();
+        else if (_hoveredElement == _pressedElement) _pressedElement.Interactable.OnClick?.Invoke(mousePos);
 
         _pressedElement = null;
         _draggingElement = null;

@@ -3,6 +3,7 @@ using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui;
 using VoxelUiDemo.ui.elements;
+using VoxelUiDemo.ui.elements.basic;
 using VoxelUiDemo.voxel_engine;
 using Transform = VoxelUiDemo.ui.Transform;
 
@@ -17,7 +18,7 @@ static class Program {
         //Raylib.ToggleFullscreen();
         Raylib.SetTargetFPS(60);
         
-        var rootCanvas = UiTempContent.AssembleUI(Raylib.GetMonitorWidth(0), Raylib.GetMonitorHeight(0));
+        var rootCanvas = UiTempContent.AssembleUi(Raylib.GetMonitorWidth(0), Raylib.GetMonitorHeight(0));
 
         List<UiRenderCommand> renderCommands = [];
         while (!Raylib.WindowShouldClose()) {

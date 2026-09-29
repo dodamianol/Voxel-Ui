@@ -1,6 +1,7 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Raylib_cs;
+using VoxelUiDemo.ui.components;
+using VoxelUiDemo.ui.elements.basic;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -8,11 +9,11 @@ public class UiButton : UiElement {
     private readonly RectRenderer _rectRenderer = new(Color.Gray);
     private readonly InteractableComponent _interactable = new();
 
-    public Color NormalColor { get; set; } = Color.Gray;
-    public Color HighlightColor { get; set; } = Color.LightGray;
-    public Color PressedColor { get; set; } = Color.DarkGreen;
+    public Color NormalColor { get; init; } = Color.Gray;
+    public Color HighlightColor { get; init; } = Color.LightGray;
+    public Color PressedColor { get; init; } = Color.DarkGreen;
 
-    public Action? OnClick {
+    public Action<Vector2>? OnClick {
         get => _interactable.OnClick;
         set => _interactable.OnClick = value;
     }

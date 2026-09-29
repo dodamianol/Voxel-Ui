@@ -1,7 +1,8 @@
 ﻿using System.Numerics;
 using Raylib_cs;
+using VoxelUiDemo.ui.components;
 
-namespace VoxelUiDemo.ui.elements;
+namespace VoxelUiDemo.ui.elements.basic;
 
 public abstract class UiElement {
     public UiElement? Parent { get; private set; }

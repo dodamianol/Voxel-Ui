@@ -1,16 +1,16 @@
-﻿using Raylib_cs;
+﻿using VoxelUiDemo.ui.elements.basic;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiGridPanel :  UiElement {
     
-    //TODO: make uipanel as background 
+    //TODO: make uiPanel as background 
     
     public Orientation PrimaryOrientation = Orientation.Horizontal;
     public int SpacingX { get; init; } = 10;
     public int SpacingY { get; init; } = 10;
-    public int ElementsPerPrimarayDimension { get; init; } = 3;
+    public int ElementsPerPrimaryDimension { get; init; } = 3;
 
     protected override void ArrangeChildren() {
         var countInCurrentRow = 0;
@@ -28,7 +28,7 @@ public class UiGridPanel :  UiElement {
             
             countInCurrentRow++;
 
-            if (countInCurrentRow < ElementsPerPrimarayDimension) continue;
+            if (countInCurrentRow < ElementsPerPrimaryDimension) continue;
 
             if (PrimaryOrientation == Orientation.Horizontal) {
                 xPos = Layout.Transform.Offset.X;    

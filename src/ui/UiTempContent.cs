@@ -1,12 +1,13 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui.elements;
+using VoxelUiDemo.ui.elements.basic;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui;
 
 public static class UiTempContent {
-    public static UiElement AssembleUI(int screenWidth, int screenHeight) {
+    public static UiElement AssembleUi(int screenWidth, int screenHeight) {
         var rootCanvas = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
                 Transform = new Transform() { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
@@ -36,7 +37,7 @@ public static class UiTempContent {
                 Anchor = AnchorType.BottomRight, Transform = new Transform { Size = new Vector2I(200, 50) }
             },
             NormalColor = Color.Gold,
-            OnClick = () => Console.WriteLine("Button was clicked!"),
+            OnClick = (vector2) => Console.WriteLine("Button was clicked! (At: " + vector2 + ")"),
             Text = new UiText {
                 Layout = new LayoutComponent {
                     Anchor = AnchorType.Center, Transform = new Transform { Size = new Vector2I(200, 50) }
@@ -92,7 +93,7 @@ public static class UiTempContent {
             Layout = new LayoutComponent{ Anchor = AnchorType.MiddleRight,
             Transform = new Transform{ Offset = new Vector2I(-50, 0), Size = new Vector2I(500, 500) }},
             PrimaryOrientation =  Orientation.Vertical,
-            ElementsPerPrimarayDimension = 4,
+            ElementsPerPrimaryDimension = 4,
             SpacingX = 115,
             SpacingY = 115
         };

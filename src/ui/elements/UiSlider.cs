@@ -1,10 +1,12 @@
 ﻿using System.Numerics;
 using Raylib_cs;
+using VoxelUiDemo.ui.components;
+using VoxelUiDemo.ui.elements.basic;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements {
     public class UiSlider : UiElement {
-        public float Value { get; private set; } = 0.0f;
+        public float Value { get; private set; }
         public Action<float>? OnValueChanged { get; set; }
         
         public Color NormalColor { get; set; } = Color.Gray;
@@ -13,19 +15,18 @@ namespace VoxelUiDemo.ui.elements {
 
         private readonly InteractableComponent _interactable = new();
         
-        private bool _isBeingDragged = false;
         private float _xOffsetToHandlePos;
         private float _minX, _maxX;
         
-        private UiRect _bar = null!;
-        private UiRect _handle = null!;
-        private UiText _text = null!;
-        private UiRect _barHighlighter = null!;
+        private readonly UiRect _bar = null!;
+        private readonly UiRect _handle = null!;
+        private readonly UiText _text = null!;
+        private readonly UiRect _barHighlighter = null!;
 
         public UiRect Bar {
             get => _bar;
             init {
-                if (_bar != null) Children.Remove(_bar);
+                Children.Remove(_bar);
                 _bar = value;
                 AddChild(_bar);
             }
@@ -34,9 +35,8 @@ namespace VoxelUiDemo.ui.elements {
         public UiRect Handle {
             get => _handle;
             init {
-                if (_handle != null) Children.Remove(_handle);
+                Children.Remove(_handle);
                 _handle = value;
-                _handle.Interactable = new InteractableComponent{BlocksInput = false};
                 AddChild(_handle);
             }
         }
@@ -44,7 +44,7 @@ namespace VoxelUiDemo.ui.elements {
         public UiText Text {
             get => _text;
             init {
-                if (_text != null) Children.Remove(_text);
+                Children.Remove(_text);
                 _text = value;
                 AddChild(_text);
             }
@@ -53,7 +53,7 @@ namespace VoxelUiDemo.ui.elements {
         public UiRect BarHighlighter {
             get => _barHighlighter;
             init {
-                if (_barHighlighter != null) Children.Remove(_barHighlighter);
+                Children.Remove(_barHighlighter);
                 _barHighlighter = value;
                 AddChild(_barHighlighter);
             }
@@ -61,6 +61,7 @@ namespace VoxelUiDemo.ui.elements {
         
         public UiSlider() {
             Interactable = _interactable;
+            _interactable.OnPress += OnPress;
             _interactable.OnDragStart += OnDragStart;
             _interactable.OnDrag += OnDrag;
             _interactable.OnDragEnd += OnDragEnd;
@@ -114,50 +115,57 @@ namespace VoxelUiDemo.ui.elements {
                 Size = Vector2I.Round(new Vector2(barHighlighterWidth, barHeight))
             });
         }
+
+        private void SetValue(float value) {
+            value = Math.Clamp(value, 0f, 1f);
+
+            if (MathF.Abs(Value - value) <= 0.001f) return;
+
+            Value = value;
+            OnValueChanged?.Invoke(Value);
+            _text.Text = Value.ToString("0.00");
+        }
         
-        public void OnDragStart(Vector2 mousePos) {
-            _isBeingDragged = true;
-            
+        private float CalculateValueFromMousePosition(Vector2 mousePos, float handleOffset = 0f) {
+            var localHandleX = 
+                (mousePos.X - handleOffset - Layout.FinalTransform.Offset.X)
+                / Layout.FinalTransform.Scale.X;
+
+            var clampedHandleX = Math.Clamp(localHandleX, _minX, _maxX);
+
+            if (_maxX <= _minX) return 0f;
+
+            return (clampedHandleX - _minX) / (_maxX - _minX);
+        }
+        
+        private void OnPress(Vector2 mousePos) {
+            var offset = Handle.Layout.FinalTransform.Size.X / 2;
+            SetValue(CalculateValueFromMousePosition(mousePos, offset));
+        }
+        
+        private void OnDragStart(Vector2 mousePos) {
             if (Raylib.CheckCollisionPointRec(mousePos, Handle.Layout.FinalTransform.ToRectangle())) {
                 _xOffsetToHandlePos = mousePos.X - Handle.Layout.FinalTransform.Offset.X;
             } 
             else {
                 _xOffsetToHandlePos = Handle.Layout.FinalTransform.Size.X / 2f;
-                OnDrag(mousePos);
             }
         }
 
-        public void OnDrag(Vector2 mousePos) {
-            var desiredGlobalHandleX = mousePos.X - _xOffsetToHandlePos;
-            var globalDistance = desiredGlobalHandleX - Layout.FinalTransform.Offset.X;
-            var scaleX = Layout.FinalTransform.Scale.X;
-            var localNewX = globalDistance / scaleX; 
-    
-            localNewX = Math.Clamp(localNewX, _minX, _maxX);
-
-            var newValue = 0f;
-            if (_maxX > _minX) {
-                newValue = (localNewX - _minX) / (_maxX - _minX);
-            }
-
-            if (!(Math.Abs(Value - newValue) > 0.001f)) return;
-
-            Value = newValue;
-            OnValueChanged?.Invoke(Value);
-            _text.Text = Value.ToString("0.00");
+        private void OnDrag(Vector2 mousePos) {
+            SetValue(CalculateValueFromMousePosition(mousePos, _xOffsetToHandlePos));
         }
 
-        public void OnDragEnd() {
-            _isBeingDragged = false;
+        private void OnDragEnd() {
             _xOffsetToHandlePos = 0;
         }
         
         public override void Update(Vector2 mousePos) {
             base.Update(mousePos);
 
-            if (_isBeingDragged) {
+            if (_interactable.IsPressed) {
                 _handle.BackgroundColor = PressedColor;
-            } else if (_handle.Interactable.IsHovered) {
+            } else if (_handle.ContainsPoint(mousePos)) {
                 _handle.BackgroundColor = HighlightColor;
             } else {
                 _handle.BackgroundColor = NormalColor;

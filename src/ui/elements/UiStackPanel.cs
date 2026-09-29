@@ -1,11 +1,11 @@
-﻿using VoxelUiDemo.voxel_engine;
-using Rectangle = Raylib_cs.Rectangle;
+﻿using VoxelUiDemo.ui.elements.basic;
+using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiStackPanel :  UiElement {
     public Orientation Orientation = Orientation.Horizontal;
-    public int Spacing { get; set; } = 10;
+    public int Spacing { get; init; } = 10;
     
     protected override void ArrangeChildren() {
         var cursor = (Orientation == Orientation.Horizontal) ? Layout.Transform.Offset.X : Layout.Transform.Offset.Y;
