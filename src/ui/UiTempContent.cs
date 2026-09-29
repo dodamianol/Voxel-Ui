@@ -73,7 +73,7 @@ public static class UiTempContent {
         var stackPanel = new UiStackPanel() { 
             Layout = new LayoutComponent{ Anchor = AnchorType.BottomCenter,
             Transform = new Transform{ Offset = new Vector2I(0, -50), Size = new Vector2I(1020, 100) }},
-            Spacing = 115,
+            Spacing = 15,
             Orientation = Orientation.Horizontal,
             Renderer = new RectRenderer{ Color = Color.DarkGray }
         };
@@ -94,8 +94,8 @@ public static class UiTempContent {
             Transform = new Transform{ Offset = new Vector2I(-50, 0), Size = new Vector2I(500, 500) }},
             PrimaryOrientation =  Orientation.Vertical,
             ElementsPerPrimaryDimension = 4,
-            SpacingX = 115,
-            SpacingY = 115
+            SpacingX = 15,
+            SpacingY = 15
         };
         rootCanvas.AddChild(gridPanel);
         

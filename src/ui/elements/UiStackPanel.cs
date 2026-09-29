@@ -1,24 +1,26 @@
-﻿using VoxelUiDemo.ui.elements.basic;
+using VoxelUiDemo.ui.elements.basic;
 using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
 public class UiStackPanel :  UiElement {
     public Orientation Orientation = Orientation.Horizontal;
+    public Vector2I ChildSize { get; init; } = new(100, 100);
     public int Spacing { get; init; } = 10;
     
     protected override void ArrangeChildren() {
-        var cursor = (Orientation == Orientation.Horizontal) ? Layout.Transform.Offset.X : Layout.Transform.Offset.Y;
+        var cursor = 0;
 
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
 
-            var nextTransform = (Orientation == Orientation.Horizontal) ?
-                new Transform{ Offset = new Vector2I(cursor, Layout.Transform.Offset.Y), Size = child.Layout.Transform.Size } : 
-                new Transform{ Offset = new Vector2I(Layout.Transform.Offset.X, cursor), Size = child.Layout.Transform.Size };
-            child.AssignTransform(nextTransform);
+            var curTransform = child.Layout.Transform;
+            var nextTransform = (Orientation == Orientation.Horizontal) 
+                ? curTransform.WithOffset(new Vector2I(cursor, 0)).WithSize(ChildSize) 
+                : curTransform.WithOffset(new Vector2I(0, cursor)).WithSize(ChildSize);
+            child.AssignTransform(nextTransform, AnchorType.TopLeft);
             
-            cursor += Spacing;
+            cursor += (Orientation == Orientation.Horizontal ? ChildSize.X : ChildSize.Y) + Spacing;
         }
     }
 }
