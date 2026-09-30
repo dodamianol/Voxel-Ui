@@ -1,5 +1,5 @@
+using System.Numerics;
 using VoxelUiDemo.ui.elements.basic;
-using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -8,22 +8,22 @@ public class UiGridPanel : UiElement {
     //TODO: make uiPanel as background 
     
     public Orientation PrimaryOrientation = Orientation.Horizontal;
-    public Vector2I CellSize { get; init; } = new(100, 100);
+    public Vector2 CellSize { get; init; } = new(100, 100);
     public int SpacingX { get; init; } = 10;
     public int SpacingY { get; init; } = 10;
     public int ElementsPerPrimaryDimension { get; init; } = 3;
 
     protected override void ArrangeChildren() {
         var countInCurrentRow = 0;
-        var xPos = 0;
-        var yPos = 0;
+        var xPos = 0f;
+        var yPos = 0f;
         
         foreach (var child in Children) {
             if (!child.IsVisible) continue;
             
             var curTransform = child.Layout.Transform;
             var nextTransform = curTransform
-                .WithOffset(new Vector2I(xPos, yPos))
+                .WithOffset(new Vector2(xPos, yPos))
                 .WithSize(CellSize);
             child.AssignTransform(nextTransform, AnchorType.TopLeft);
 

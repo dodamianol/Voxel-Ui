@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Raylib_cs;
-using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements;
 
@@ -31,7 +30,7 @@ public class TextRenderer : RenderComponent {
         commands.Add(new UiRenderCommand {
             Type = CommandType.DrawText,
             Text = Text,
-            Position = Vector2I.Round(new Vector2(drawX, drawY)),
+            Position = new Vector2(drawX, drawY),
             FontSize = scaledFontSize,
             Color = TextColor
         });

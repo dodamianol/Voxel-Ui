@@ -6,6 +6,8 @@ using VoxelUiDemo.ui.elements.basic;
 namespace VoxelUiDemo;
 
 static class Program {
+    public static int uiPixelSize = 1;
+
     private static readonly UiInputSystem Input = new UiInputSystem();
     
     private static void Main() {
@@ -36,17 +38,16 @@ static class Program {
         DrawCommands(renderCommands);
     }
     
-    
     private static void DrawCommands(List<UiRenderCommand> renderCommands) {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Color.Black);
 
         foreach (var cmd in renderCommands) {
             if (cmd.Type == CommandType.DrawRect) {
-                Raylib.DrawRectangle(cmd.Position.X, cmd.Position.Y, cmd.Size.X, cmd.Size.Y, cmd.Color);
+                Raylib.DrawRectangleV(cmd.Position, cmd.Size, cmd.Color);
             }
             else if (cmd.Type == CommandType.DrawText) {
-                Raylib.DrawText(cmd.Text, cmd.Position.X, cmd.Position.Y, cmd.FontSize, cmd.Color);
+                Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, cmd.FontSize, cmd.Color);
             }
             else if (cmd is { Type: CommandType.DrawTexture, Texture: not null }) {
                 var sourceRec = new Rectangle(0, 0, cmd.Texture.Value.Width, cmd.Texture.Value.Height);

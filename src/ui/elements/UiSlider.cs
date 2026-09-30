@@ -2,7 +2,6 @@
 using Raylib_cs;
 using VoxelUiDemo.ui.components;
 using VoxelUiDemo.ui.elements.basic;
-using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui.elements {
     public class UiSlider : UiElement {
@@ -72,7 +71,7 @@ namespace VoxelUiDemo.ui.elements {
             _interactable.OnDragEnd += OnDragEnd;
             
             var currentLayout = Layout;
-            currentLayout.Transform = new Transform{ Size = new Vector2I(500, 50) };
+            currentLayout.Transform = new Transform{ Size = new Vector2(500, 50) };
             Layout = currentLayout;
 
             Bar = new UiRect { BackgroundColor = BarColor };
@@ -80,7 +79,7 @@ namespace VoxelUiDemo.ui.elements {
             Text = new UiText {
                 Layout = new LayoutComponent { 
                     Anchor = AnchorType.MiddleRight, 
-                    Transform = new Transform{ Offset = new Vector2I(-15, 0) } 
+                    Transform = new Transform{ Offset = new Vector2(-15, 0) } 
                 },
                 TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
             };
@@ -96,9 +95,8 @@ namespace VoxelUiDemo.ui.elements {
             var barX = 20f; 
             var barY = (sliderSize.Y - barHeight) / 2f;
     
-            Bar.AssignTransform(new Transform {
-                Offset = Vector2I.Round(new Vector2(barX, barY)), 
-                Size = Vector2I.Round(new Vector2(barWidth, barHeight))
+            Bar.AssignTransform(new Transform { 
+                Offset = new Vector2(barX, barY), Size = new Vector2(barWidth, barHeight)
             });
 
             var handleWidth = (sliderSize.Y * 0.8f) / 2;
@@ -110,14 +108,12 @@ namespace VoxelUiDemo.ui.elements {
             var handleX = _minX + (_maxX - _minX) * Value;
     
             Handle.AssignTransform(new Transform {
-                Offset = Vector2I.Round(new Vector2(handleX, handleY)), 
-                Size = Vector2I.Round(new Vector2(handleWidth, handleHeight))
+                Offset = new Vector2(handleX, handleY), Size = new Vector2(handleWidth, handleHeight)
             });
     
             var barHighlighterWidth = handleX - barX;
             BarHighlighter.AssignTransform(new Transform {
-                Offset = Vector2I.Round(new Vector2(barX, barY)), 
-                Size = Vector2I.Round(new Vector2(barHighlighterWidth, barHeight))
+                Offset = new Vector2(barX, barY), Size = new Vector2(barHighlighterWidth, barHeight)
             });
         }
 

@@ -2,7 +2,6 @@
 using Raylib_cs;
 using VoxelUiDemo.ui.elements;
 using VoxelUiDemo.ui.elements.basic;
-using VoxelUiDemo.voxel_engine;
 
 namespace VoxelUiDemo.ui;
 
@@ -15,7 +14,7 @@ public static class UiTempContent {
     public static UiElement AssembleUi(int screenWidth, int screenHeight) {
         var rootCanvas = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-                Transform = new Transform { Offset = new Vector2I(0, 0), Size = new Vector2I(screenWidth, screenHeight) }},
+                Transform = new Transform { Offset = new Vector2(0, 0), Size = new Vector2(screenWidth, screenHeight) }},
             BackgroundColor = RootColor
         };
 
@@ -32,14 +31,14 @@ public static class UiTempContent {
         var topLeft = new UiRect {
             Layout = new LayoutComponent {
                 Anchor = AnchorType.TopLeft,
-                Transform = new Transform { Offset = new Vector2I(50, 50), Size = new Vector2I(800, 550) }
+                Transform = new Transform { Offset = new Vector2(50, 50), Size = new Vector2(800, 550) }
             },
             BackgroundColor = RootChild1Color
         };
         rootCanvas.AddChild(topLeft);
         
         var buttonAlignmentParent = new UiRect {
-            Layout = new LayoutComponent { Anchor = AnchorType.Center, Transform = new Transform{ Size = new Vector2I(750, 500) }
+            Layout = new LayoutComponent { Anchor = AnchorType.Center, Transform = new Transform{ Size = new Vector2(750, 500) }
             },
             BackgroundColor = RootChild1Color
         };
@@ -49,13 +48,13 @@ public static class UiTempContent {
         foreach (var anchor in Enum.GetValues<AnchorType>()) {
             var button = new UiButton {
                 Layout = new LayoutComponent {
-                    Anchor = anchor, Transform = new Transform { Size = new Vector2I(200, 50) }
+                    Anchor = anchor, Transform = new Transform { Size = new Vector2(200, 50) }
                 },
                 OnClick = vector2 => Console.WriteLine("Button was clicked! (At: " + vector2 + ")"),
                 
                 Text = new UiText {
                     Layout = new LayoutComponent {
-                        Anchor = AnchorType.Center, Transform = new Transform { Size = new Vector2I(200, 50) }
+                        Anchor = AnchorType.Center, Transform = new Transform { Size = new Vector2(200, 50) }
                     },
                     Text = "Click me!", FontSize = 24, TextColor = Color.White
                 }
@@ -68,7 +67,7 @@ public static class UiTempContent {
         var middle = new UiRect {
             Layout = new LayoutComponent {
                 Anchor = AnchorType.MiddleRight,
-                Transform = new Transform { Offset =  new Vector2I(-600, -147), Size = new Vector2I(200, 200) }
+                Transform = new Transform { Offset =  new Vector2(-600, -147), Size = new Vector2(200, 200) }
             },
             BackgroundColor = RootChild1Color
         };
@@ -76,14 +75,14 @@ public static class UiTempContent {
         
         var testTexture = new UiImage {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform{ Size = new Vector2I(75, 75) }},
+            Transform = new Transform{ Size = new Vector2(75, 75) }},
             Texture = Raylib.LoadTexture("assets/textures/grass0.png")
         };
         middle.AddChild(testTexture);
 
         var transparentPanel = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform{ Offset = new Vector2I(35, 0), Size = new Vector2I(70, 125) }},
+            Transform = new Transform{ Offset = new Vector2(35, 0), Size = new Vector2(70, 125) }},
             BackgroundColor = new Color(0, 0, 0, 150)
         };
         middle.AddChild(transparentPanel);
@@ -93,7 +92,7 @@ public static class UiTempContent {
         var bottomRect = new UiRect {
             Layout = new LayoutComponent {
                 Anchor = AnchorType.BottomCenter,
-                Transform = new Transform { Offset = new Vector2I(0, -50), Size = new Vector2I(1020+50, 100+50) }
+                Transform = new Transform { Offset = new Vector2(0, -50), Size = new Vector2(1020+50, 100+50) }
             },
             BackgroundColor = RootChild1Color
         };
@@ -101,7 +100,7 @@ public static class UiTempContent {
         
         var stackPanel = new UiStackPanel { 
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-                Transform = new Transform{ Size = new Vector2I(1020, 100) }
+                Transform = new Transform{ Size = new Vector2(1020, 100) }
             },
             Spacing = 15,
             Orientation = Orientation.Horizontal
@@ -111,7 +110,7 @@ public static class UiTempContent {
     
         for (var i = 0; i < 9; i++) {
             var stackPanelChild = new UiRect {
-                Layout = new LayoutComponent{ Transform = new Transform{ Size = new Vector2I(100, 100) }}, 
+                Layout = new LayoutComponent{ Transform = new Transform{ Size = new Vector2(100, 100) }}, 
                 BackgroundColor = SlotColor
             };
             stackPanel.AddChild(stackPanelChild);
@@ -121,7 +120,7 @@ public static class UiTempContent {
     private static void AddGridPanel(UiElement rootCanvas) {
         var middleCenter = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.MiddleRight,
-                Transform = new Transform{ Offset = new Vector2I(-50, 0), Size = new Vector2I(445+50, 445+50) }
+                Transform = new Transform{ Offset = new Vector2(-50, 0), Size = new Vector2(445+50, 445+50) }
                 
             },
             BackgroundColor = RootChild1Color
@@ -130,7 +129,7 @@ public static class UiTempContent {
         
         var gridPanel = new UiGridPanel {
             Layout = new LayoutComponent{ Anchor = AnchorType.Center,
-            Transform = new Transform{ Size = new Vector2I(445, 445) }},
+            Transform = new Transform{ Size = new Vector2(445, 445) }},
             PrimaryOrientation =  Orientation.Vertical,
             ElementsPerPrimaryDimension = 4,
             SpacingX = 15,
@@ -141,7 +140,7 @@ public static class UiTempContent {
         for (var i = 0; i < 15; i++) {
             var stackPanelChild = new UiRect {
                 Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-                Transform = new Transform{ Size = new Vector2I(100, 100) }}, 
+                Transform = new Transform{ Size = new Vector2(100, 100) }}, 
                 BackgroundColor = SlotColor
             };
             gridPanel.AddChild(stackPanelChild);
@@ -151,14 +150,14 @@ public static class UiTempContent {
     private static void AddSlider(UiElement rootCanvas) {
         var topRight = new UiRect {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopRight,
-            Transform = new Transform{ Offset = new Vector2I(-50, 50), Size = new Vector2I(750, 260) }},
+            Transform = new Transform{ Offset = new Vector2(-50, 50), Size = new Vector2(750, 260) }},
             BackgroundColor = RootChild1Color
         };
         rootCanvas.AddChild(topRight);
 
         var slider1 = new UiSlider {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(25, 25), Size = new Vector2I(500, 50) }},
+            Transform = new Transform{ Offset = new Vector2(25, 25), Size = new Vector2(500, 50) }},
             Renderer = new RectRenderer(),
             ProgressColor = new Color(34, 197, 94, 255)
         };
@@ -166,7 +165,7 @@ public static class UiTempContent {
         
         var slider2 = new UiSlider {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(25, 100), Size = new Vector2I(500, 50), Scale = new Vector2(1.1f) }},
+            Transform = new Transform{ Offset = new Vector2(25, 100), Size = new Vector2(500, 50), Scale = new Vector2(1.1f) }},
             Renderer = new RectRenderer(),
             ProgressColor = new Color(239, 68, 68, 255)
         };
@@ -174,14 +173,14 @@ public static class UiTempContent {
         
         var slider3 = new UiSlider {
             Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-            Transform = new Transform{ Offset = new Vector2I(25, 175), Size = new Vector2I(500, 50), Scale = new Vector2(1.2f) }},
+            Transform = new Transform{ Offset = new Vector2(25, 175), Size = new Vector2(500, 50), Scale = new Vector2(1.2f) }},
             Renderer = new RectRenderer()
         };
         topRight.AddChild(slider3);
         
         // var slider4 = new UiSlider() {
         //     Layout = new LayoutComponent{ Anchor = AnchorType.TopLeft,
-        //         Transform = new Transform{ Offset = new Vector2I(25, 175), Size = new Vector2I(500, 50), Scale = new Vector2(3f) }},
+        //         Transform = new Transform{ Offset = new Vector2(25, 175), Size = new Vector2(500, 50), Scale = new Vector2(3f) }},
         //     Renderer = new RectRenderer{ },
         // };
         // topRight.AddChild(slider4);
