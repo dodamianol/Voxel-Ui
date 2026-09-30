@@ -1,7 +1,6 @@
 ﻿using Raylib_cs;
-using VoxelUiDemo.ui.elements.basic;
 
-namespace VoxelUiDemo.ui.elements;
+namespace VoxelUiDemo.ui.elements.basic;
 
 public class UiImage : UiElement {
     private readonly ImageRenderer _imageRenderer;

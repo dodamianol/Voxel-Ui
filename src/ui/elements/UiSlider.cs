@@ -9,10 +9,15 @@ namespace VoxelUiDemo.ui.elements {
         public float Value { get; private set; }
         public Action<float>? OnValueChanged { get; set; }
         
-        public Color NormalColor { get; set; } = Color.Gray;
-        public Color HighlightColor { get; set; } = Color.LightGray;
-        public Color PressedColor { get; set; } = Color.DarkGreen;
-
+        public Color BarColor { get; set; } = new(63, 63, 70, 255);
+        public Color HandleColor { get; set; } = new(212, 212, 216, 255);
+        public Color HandleHoverColor { get; set; } = new(244, 244, 245, 255);
+        public Color HandlePressedColor { get; set; } = new(161, 161, 170, 255);
+        public Color ProgressColor {
+            get => _barHighlighter.BackgroundColor;
+            set => _barHighlighter.BackgroundColor = value;
+        } 
+        
         private readonly InteractableComponent _interactable = new();
         
         private float _xOffsetToHandlePos;
@@ -70,8 +75,8 @@ namespace VoxelUiDemo.ui.elements {
             currentLayout.Transform = new Transform{ Size = new Vector2I(500, 50) };
             Layout = currentLayout;
 
-            Bar = new UiRect { BackgroundColor = Color.LightGray };
-            Handle = new UiRect { BackgroundColor = NormalColor };
+            Bar = new UiRect { BackgroundColor = BarColor };
+            Handle = new UiRect { BackgroundColor = HandleColor };
             Text = new UiText {
                 Layout = new LayoutComponent { 
                     Anchor = AnchorType.MiddleRight, 
@@ -79,7 +84,7 @@ namespace VoxelUiDemo.ui.elements {
                 },
                 TextColor = Color.White, Text = "0,00", AlignH = TextAlignmentHorizontal.Right
             };
-            BarHighlighter = new UiRect { BackgroundColor = Color.DarkGreen };
+            BarHighlighter = new UiRect { BackgroundColor = new Color(59, 130, 246, 255) };
             
         }
 
@@ -164,11 +169,11 @@ namespace VoxelUiDemo.ui.elements {
             base.Update(mousePos);
 
             if (_interactable.IsPressed) {
-                _handle.BackgroundColor = PressedColor;
+                _handle.BackgroundColor = HandlePressedColor;
             } else if (_handle.ContainsPoint(mousePos)) {
-                _handle.BackgroundColor = HighlightColor;
+                _handle.BackgroundColor = HandleHoverColor;
             } else {
-                _handle.BackgroundColor = NormalColor;
+                _handle.BackgroundColor = HandleColor;
             }
         }
     }

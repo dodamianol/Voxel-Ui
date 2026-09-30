@@ -1,7 +1,6 @@
 ﻿using Raylib_cs;
-using VoxelUiDemo.ui.elements.basic;
 
-namespace VoxelUiDemo.ui.elements;
+namespace VoxelUiDemo.ui.elements.basic;
 
 public class UiRect : UiElement {
     private readonly RectRenderer _rectRenderer;

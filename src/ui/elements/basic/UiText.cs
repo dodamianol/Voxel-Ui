@@ -1,7 +1,6 @@
 ﻿using Raylib_cs;
-using VoxelUiDemo.ui.elements.basic;
 
-namespace VoxelUiDemo.ui.elements;
+namespace VoxelUiDemo.ui.elements.basic;
 
 public class UiText : UiElement {
     private readonly TextRenderer _textRenderer;

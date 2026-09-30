@@ -3,7 +3,7 @@
 namespace VoxelUiDemo.ui.elements;
 
 public class RectRenderer : RenderComponent {
-    public Color Color { get; set; } = Color.Gray;
+    public Color Color { get; set; } = new(35, 35, 35, 255);
 
     public RectRenderer() { }
 

@@ -13,7 +13,7 @@ public class UiInputSystem {
     private Vector2 _pressPosition;
     private bool _isDragging;
 
-    private const float DragThreshold = 1.0f;
+    private const float DragThreshold = 3.0f;
 
     public void Update(UiElement root) {
         var mousePos = Raylib.GetMousePosition();

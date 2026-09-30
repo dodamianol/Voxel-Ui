@@ -9,9 +9,9 @@ public class UiButton : UiElement {
     private readonly RectRenderer _rectRenderer = new(Color.Gray);
     private readonly InteractableComponent _interactable = new();
 
-    public Color NormalColor { get; init; } = Color.Gray;
-    public Color HighlightColor { get; init; } = Color.LightGray;
-    public Color PressedColor { get; init; } = Color.DarkGreen;
+    public Color NormalColor { get; init; } = new(35, 35, 35, 255);
+    public Color HighlightColor { get; init; } = new(45, 45, 45, 255);
+    public Color PressedColor { get; init; } = new(65, 65, 65, 255);
 
     public Action<Vector2>? OnClick {
         get => _interactable.OnClick;

@@ -1,18 +1,14 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 using Raylib_cs;
 using VoxelUiDemo.ui;
-using VoxelUiDemo.ui.elements;
 using VoxelUiDemo.ui.elements.basic;
-using VoxelUiDemo.voxel_engine;
-using Transform = VoxelUiDemo.ui.Transform;
 
 namespace VoxelUiDemo;
 
 static class Program {
-    private static UiInputSystem input = new UiInputSystem();
+    private static readonly UiInputSystem Input = new UiInputSystem();
     
-    private static void Main(string[] args) {
+    private static void Main() {
 
         Raylib.InitWindow(0, 0, "ui prototype");
         //Raylib.ToggleFullscreen();
@@ -32,7 +28,7 @@ static class Program {
         var mousePos = Raylib.GetMousePosition();
         
         rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)
-        input.Update(rootCanvas);
+        Input.Update(rootCanvas);
         rootCanvas.Update(mousePos);
         
         renderCommands.Clear();
@@ -50,7 +46,7 @@ static class Program {
                 Raylib.DrawRectangle(cmd.Position.X, cmd.Position.Y, cmd.Size.X, cmd.Size.Y, cmd.Color);
             }
             else if (cmd.Type == CommandType.DrawText) {
-                Raylib.DrawText(cmd.Text, (int)cmd.Position.X, (int)cmd.Position.Y, cmd.FontSize, cmd.Color);
+                Raylib.DrawText(cmd.Text, cmd.Position.X, cmd.Position.Y, cmd.FontSize, cmd.Color);
             }
             else if (cmd is { Type: CommandType.DrawTexture, Texture: not null }) {
                 var sourceRec = new Rectangle(0, 0, cmd.Texture.Value.Width, cmd.Texture.Value.Height);
