@@ -23,12 +23,12 @@ static class Program {
             GameLoop(rootCanvas, renderCommands);
         }
 
-        Raylib.CloseWindow();
+        Raylib.CloseWindow(); 
     }
 
     private static void GameLoop(UiElement rootCanvas, List<UiRenderCommand> renderCommands) {
         var mousePos = Raylib.GetMousePosition();
-        
+         
         rootCanvas.CalculateLayout(); // (instead of GameLoop:) call this when: game start/ui init; window got resized; if dynamic elements are added (inventory opens)
         Input.Update(rootCanvas);
         rootCanvas.Update(mousePos);
